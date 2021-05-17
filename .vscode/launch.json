@@ -9,7 +9,8 @@
             "type": "node",
             "request": "attach",
             "port": 5858,
-            "preLaunchTask": "func: host start"
-        }
+            "preLaunchTask": "func: host start",
+            "env": {},
+        },
     ]
 }
