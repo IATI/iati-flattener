@@ -5,8 +5,8 @@
             "type": "httpTrigger",
             "direction": "in",
             "name": "req",
-            "methods": ["get"],
-            "route": "pvt/"
+            "methods": ["post"],
+            "route": "pvt/iati-doc"
         },
         {
             "type": "http",
