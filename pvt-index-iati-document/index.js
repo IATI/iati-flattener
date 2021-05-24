@@ -1,6 +1,7 @@
 // const config = require('../config/config');
-const libxml = require('libxmljs2');
+const { DOMParser } = require('xmldom');
 const solr = require('solr-client');
+const activityIndexer = require('../solr/activity/indexer');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
@@ -31,55 +32,45 @@ module.exports = async (context, req) => {
         return;
     }
 
-    let xmldoc;
+    const xmlDoc = new DOMParser().parseFromString(body);
 
-    try {
-        xmldoc = libxml.parseXml(body);
-    } catch (error) {
-        context.res = {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' },
-            body: { error: 'Body must be an xml string' },
-        };
+    let activities = xmlDoc.getElementsByTagName('iati-activities')[0];
 
-        return;
-    }
+    const version = activities.getAttribute('version');
+    const generated = activities.getAttribute('generated-datetime');
 
-    if (xmldoc) {
-        console.log('Linting is a pita');
+    activities = xmlDoc.getElementsByTagName('iati-activity');
+
+    const activitySolrDocs = [];
+
+    for (let i = 0; i < activities.length; i += 1) {
+        const activity = activities[i];
+
+        activitySolrDocs[i] = activityIndexer.getFlattenedObjectForActivityNode(
+            activity,
+            generated,
+            version
+        );
+
+        console.log(activity.nodeName);
     }
 
     const solrOptions = {
         host: '127.0.0.1',
         port: '8983',
-        core: 'dataset_shard1_replica_n1',
-        path: '/solr', // should also begin with a slash
+        core: 'activity_shard1_replica_n1',
+        path: '/solr',
     };
     // Create a client
-    const solrClient = solr.createClient(solrOptions);
-
-    solrClient.autoCommit = true;
-
-    const docs = [];
-    for (let i = 0; i <= 2; i += 1) {
-        const doc = {
-            name: 'nonsense',
-            title: 'nonsense',
-            filetype: 'nonsense',
-            date_created: '2021-01-01',
-            date_updated: '2021-01-01',
-            source_url: 'nonsense',
-        };
-        docs.push(doc);
-    }
+    const activitySolrClient = solr.createClient(solrOptions);
 
     // Add documents
-    solrClient.add(docs, (err, obj) => {
+    activitySolrClient.add(activitySolrDocs, (err, obj) => {
         if (err) {
             console.log(err);
         } else {
             console.log(obj);
-            solrClient.softCommit();
+            activitySolrClient.softCommit();
         }
     });
 
