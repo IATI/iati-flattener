@@ -1,12 +1,18 @@
-// const config = require('../config/config');
 const { DOMParser } = require('xmldom');
-const solr = require('solr-client');
+const config = require('../config/config');
 const activityIndexer = require('../solr/activity/indexer');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
     // context.log is equivalent to console.log in Azure Functions
     const startTime = getStartTime();
+
+    const name = req.query.name || (req.body && req.body.name);
+    const responseMessage = `Private API.\nVersion ${config.VERSION}\n${
+        name
+            ? `Hello, ${name}. This HTTP triggered function executed successfully.`
+            : 'This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.'
+    }`;
 
     const { body } = req;
 
@@ -39,40 +45,18 @@ module.exports = async (context, req) => {
     const version = activities.getAttribute('version');
     const generated = activities.getAttribute('generated-datetime');
 
+    const flattenedActivities = [];
     activities = xmlDoc.getElementsByTagName('iati-activity');
-
-    const activitySolrDocs = [];
 
     for (let i = 0; i < activities.length; i += 1) {
         const activity = activities[i];
 
-        activitySolrDocs[i] = await activityIndexer.getFlattenedObjectForActivityNode(
+        flattenedActivities[i] = await activityIndexer.getFlattenedObjectForActivityNode(
             activity,
             generated,
             version
         );
     }
-
-    const solrOptions = {
-        host: '127.0.0.1',
-        port: '8983',
-        core: 'activity_shard1_replica_n1',
-        path: '/solr',
-    };
-    // Create a client
-    const activitySolrClient = solr.createClient(solrOptions);
-
-    // Add documents
-    activitySolrClient.add(activitySolrDocs, (err, obj) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(obj);
-            activitySolrClient.softCommit();
-        }
-    });
-
-    const responseMessage = `Private API.`;
 
     const responseTime = getElapsedTime(startTime);
 
@@ -88,15 +72,15 @@ module.exports = async (context, req) => {
         properties: {
             messageTime: responseTime,
             responseMessage,
-            query: '?',
+            query: name,
         },
     };
+
     client.trackEvent(eventSummary);
 
-    // Generating a response
     context.res = {
         status: 200 /* Defaults to 200 */,
         headers: { 'Content-Type': 'application/json' },
-        body: responseMessage,
+        body: flattenedActivities,
     };
 };
