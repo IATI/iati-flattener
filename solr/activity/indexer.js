@@ -75,7 +75,7 @@ module.exports = {
                     parentCanonicalName
                 );
 
-                await module.exports.addToIatiObject(canonicalName, node.textContent);
+                module.exports.addToIatiObject(canonicalName, node.textContent);
 
                 for (let i = 0; i < node.attributes.length; i += 1) {
                     const att = node.attributes[i];
@@ -85,7 +85,7 @@ module.exports = {
                         canonicalName
                     );
 
-                    await module.exports.addToIatiObject(canonicalAttName, node.textContent);
+                    module.exports.addToIatiObject(canonicalAttName, node.textContent);
                 }
                 // As per the previous DS, each array of attribute values needs the same number of elements,
                 // hence this rigmarole to add in empty strings
@@ -103,13 +103,13 @@ module.exports = {
                 for (let i = 0; i < module.exports.iatiMap[canonicalName].length; i += 1) {
                     const existingAtt = module.exports.iatiMap[canonicalName][i];
                     if (!attributes.includes(existingAtt)) {
-                        await module.exports.addToIatiObject(existingAtt, '', true);
+                        module.exports.addToIatiObject(existingAtt, '', true);
                     }
                 }
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
-                await module.exports.buildIatiObject(node.childNodes[i], canonicalName, false);
+                module.exports.buildIatiObject(node.childNodes[i], canonicalName, false);
             }
         }
     },
