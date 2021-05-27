@@ -87,8 +87,9 @@ module.exports = {
 
                     module.exports.addToIatiObject(canonicalAttName, node.textContent);
                 }
-                // As per the previous DS, each array of attribute values needs the same number of elements,
-                // hence this rigmarole to add in empty strings
+                // As per the previous DS, each array of attribute values for an element
+                // needs the same number of elements, regardless as to whether the attribute exists for that element,
+                // and in the same order, hence the following rigmarole to add in empty strings
                 const attributes = [];
 
                 for (let n = 0; n < node.attributes.length; n += 1) {

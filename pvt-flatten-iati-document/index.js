@@ -1,6 +1,6 @@
 const { DOMParser } = require('xmldom');
 const config = require('../config/config');
-const activityIndexer = require('../solr/activity/indexer');
+const activityFlattener = require('../solr/activity/flattener');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
@@ -51,7 +51,7 @@ module.exports = async (context, req) => {
     for (let i = 0; i < activities.length; i += 1) {
         const activity = activities[i];
 
-        flattenedActivities[i] = await activityIndexer.getFlattenedObjectForActivityNode(
+        flattenedActivities[i] = await activityFlattener.getFlattenedObjectForActivityNode(
             activity,
             generated,
             version

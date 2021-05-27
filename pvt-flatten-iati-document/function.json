@@ -5,8 +5,10 @@
             "type": "httpTrigger",
             "direction": "in",
             "name": "req",
-            "methods": ["post"],
-            "route": "pvt/flatten"
+            "methods": [
+                "post"
+            ],
+            "route": "pvt/flatten/activities"
         },
         {
             "type": "http",
