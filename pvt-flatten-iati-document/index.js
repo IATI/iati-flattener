@@ -42,6 +42,15 @@ module.exports = async (context, req) => {
 
     let activities = xmlDoc.getElementsByTagName('iati-activities')[0];
 
+    if (!activities) {
+        context.res = {
+            status: 422,
+            headers: { 'Content-Type': 'application/json' },
+            body: { error: 'No iati-activities element found - is this an organisations doc?' },
+        };
+        return;
+    }
+
     const version = activities.getAttribute('version');
     const generated = activities.getAttribute('generated-datetime');
 
