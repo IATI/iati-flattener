@@ -85,7 +85,7 @@ module.exports = {
                         canonicalName
                     );
 
-                    module.exports.addToIatiObject(canonicalAttName, node.textContent);
+                    module.exports.addToIatiObject(canonicalAttName, att.nodeValue);
                 }
                 // As per the previous DS, each array of attribute values for an element
                 // needs the same number of elements, regardless as to whether the attribute exists for that element,
