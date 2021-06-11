@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = {
     solrSchemaObjects: [],
     iatiXsdTypes: [],
@@ -146,13 +148,28 @@ module.exports = {
 
         for (let i = 0; i < module.exports.solrSchemaObjects.length; i += 1) {
             const name = module.exports.solrSchemaObjects[i].canonicalName;
-            const {type} = module.exports.solrSchemaObjects[i];
-            const {required} = module.exports.solrSchemaObjects[i];
-            xmlString +=
-                `<field name="${name}" type="${type}" multiValued="true" indexed="true" required="${required}" stored="true"/>\n`;
+            const { type } = module.exports.solrSchemaObjects[i];
+            const { required } = module.exports.solrSchemaObjects[i];
+            xmlString += `<field name="${name}" type="${type}" multiValued="true" indexed="true" required="${required}" stored="true"/>\n`;
         }
 
-        return xmlString;
+        let tpl;
+        let schema = null;
+
+        fs.readFile(`${__dirname  }/solr_template.xml`, (error, data) => {
+            if (error) {
+                throw error;
+            }
+            tpl = data.toString();
+
+            schema = tpl.replace('#ACTIVITY_CORE#', xmlString);
+        });
+
+        while (schema === null) {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+
+        return schema;
     },
 
     getSolrSchemaFromIatiSchema: async (iatiSchema) => {
@@ -164,6 +181,8 @@ module.exports = {
             await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
         }
 
-        return module.exports.buildSolrSchemaXML();
+        const schema = await module.exports.buildSolrSchemaXML();
+
+        return schema;
     },
 };
