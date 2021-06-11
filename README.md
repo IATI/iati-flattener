@@ -1,4 +1,24 @@
-# azure-function-node-microservice-template
+# IATI Solr Functions
+
+This Azure Function provides various services to allow us to index IATI documents to Solr, including a service to convert the IATI schema into a consistent Solr schema, and a service that when given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
+
+Both these services follow the convention of reducing IATI Activities documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible velue-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
+
+The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
+
+<el1 att="val1">
+    <el2 att="val2">
+        Text Value
+    </el2>
+</el1>
+
+Would be flattened to the following:
+
+{
+"el1_att": "val1"
+"el1_el2": "Text Value"
+"el1_el2_att": "val2"
+}
 
 ## Prerequisities
 
@@ -66,25 +86,15 @@ let myEnvVariable = config.ENV_VAR
 
 ## Endpoints /api
 
-### `GET /pvt?name=Name`
+### `POST /api/pvt/convert-schema`
 
--   Returns
+Takes an IATI XML schema as the body, and returns a valid Solr schema rean Acivity core presenting to include all possible elements and attributes which may include a value, with their types converted from XSD to an appropriate Solr type.
 
-```
-Private API.
-Version <0.0.0>
-Hello, <Name>. This HTTP triggered function executed successfully.
-```
+## Endpoints /api
 
-### `GET /pub?name=Name`
+### `POST /api/pvt/flatten/activities`
 
--   Returns
-
-```
-Public API.
-Version <0.0.0>
-Hello, <Name>. This HTTP triggered function executed successfully.
-```
+Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity core, as defined by converting the IATI XML schema using the `POST /api/pvt/convert-schema` route.
 
 ## Creating a new route
 
