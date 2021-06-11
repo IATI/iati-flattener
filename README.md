@@ -2,22 +2,22 @@
 
 This Azure Function provides various services to allow us to index IATI documents to Solr, including a service to convert the IATI schema into a consistent Solr schema, and a service that when given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
 
-Both these services follow the convention of reducing IATI Activities documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible velue-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
+Both these services follow the convention of reducing Activity documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible velue-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
-<el1 att="val1">
-    <el2 att="val2">
+<parent att="val1">
+    <child att="val2">
         Text Value
-    </el2>
-</el1>
+    </child>
+</parent>
 
 Would be flattened to the following:
 
 {
-"el1_att": "val1"
-"el1_el2": "Text Value"
-"el1_el2_att": "val2"
+"parent_att": "val1"
+"parent_child": "Text Value"
+"parent_child_att": "val2"
 }
 
 ## Prerequisities
