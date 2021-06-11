@@ -6,19 +6,19 @@ Both these services follow the convention of reducing Activity documents down to
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
-<parent att="val1">
-    <child att="val2">
-        Text Value
-    </child>
-</parent>
+    <parent att="val1">
+        <child att="val2">
+            Text Value
+        </child>
+    </parent>
 
 Would be flattened to the following:
 
-{
-"parent_att": "val1"
-"parent_child": "Text Value"
-"parent_child_att": "val2"
-}
+    {
+        "parent_att": "val1",
+        "parent_child": "Text Value",
+        "parent_child_att": "val2"
+    }
 
 ## Prerequisities
 
