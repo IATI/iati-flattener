@@ -97,7 +97,7 @@ module.exports = {
         if (addElement) {
             if (
                 solrElement.type !== null &&
-                !module.exports.solrSchemaObjects.includes(solrElement)
+                !module.exports.hasElementWithCanonicalName(solrElement.canonicalName)
             ) {
                 module.exports.solrSchemaObjects.push(solrElement);
             }
@@ -110,6 +110,16 @@ module.exports = {
                 );
             }
         }
+    },
+
+    hasElementWithCanonicalName: (canonicalName) => {
+        for (let i = 0; i < module.exports.solrSchemaObjects.length; i += 1) {
+            if (module.exports.solrSchemaObjects[i].canonicalName === canonicalName) {
+                return true;
+            }
+        }
+
+        return false;
     },
 
     convertNameToCanonical: (nodeName, parentNodeCanonical = null) => {
