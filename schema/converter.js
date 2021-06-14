@@ -148,7 +148,7 @@ module.exports = {
             {
                 canonicalName: 'dataset_date_updated',
                 type: 'pdate',
-                required: true,
+                required: false,
             },
         ];
     },
