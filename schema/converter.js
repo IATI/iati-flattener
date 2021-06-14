@@ -67,7 +67,7 @@ module.exports = {
                             );
 
                             if (element.attributes[i].nodeValue === 'narrative') {
-                                solrElement.type = 'iati-narrative';
+                                solrElement.type = 'iati_narrative';
                             } else {
                                 solrElement.type = await module.exports.convertXsdTypeToSolr(
                                     element.attributes[i].nodeValue
@@ -156,7 +156,7 @@ module.exports = {
         let tpl;
         let schema = null;
 
-        fs.readFile(`${__dirname  }/solr_template.xml`, (error, data) => {
+        fs.readFile(`${__dirname}/solr_template.xml`, (error, data) => {
             if (error) {
                 throw error;
             }

@@ -113,14 +113,14 @@
     <field name="title" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="description" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="comment" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="reporting_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="reporting_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="reporting_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="reporting_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="reporting_org_secondary_reporter" type="boolean" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="title" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="description" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="category_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -132,7 +132,7 @@
     <field name="iati_identifier" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="reporting_org" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="title" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="description_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="description_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="description_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="other_identifier" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -174,9 +174,9 @@
     <field name="iati_identifier" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="reporting_org" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="title" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="description_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="description_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="description_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="other_identifier" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="activity_status" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -207,45 +207,45 @@
     <field name="result" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="crs_add" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="fss" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="participating_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="participating_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org_role" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="participating_org_crs_channel_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="activity_scope_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="recipient_country_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="recipient_country_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_country_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_country_percentage" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="recipient_region_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="recipient_region_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_percentage" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="collaboration_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="default_flow_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="default_aid_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="default_finance_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="other_identifier_owner_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="other_identifier_owner_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="other_identifier_owner_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="other_identifier_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="other_identifier_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="owner_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="owner_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="owner_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="sector_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="sector_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_percentage" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="activity_date_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="activity_date_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="activity_date_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="activity_date_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="activity_status_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="contact_info_organisation" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="contact_info_department" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -259,39 +259,39 @@
     <field name="job_title" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="mailing_address" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="default_tied_status_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="humanitarian_scope_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="humanitarian_scope_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="humanitarian_scope_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="humanitarian_scope_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="humanitarian_scope_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="humanitarian_scope_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="policy_marker_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="policy_marker_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="policy_marker_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="policy_marker_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="policy_marker_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="policy_marker_significance" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="capital_spend_percentage" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_transaction_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_transaction_date_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_value" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_description" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="transaction_provider_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="transaction_provider_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_provider_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_provider_org_provider_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_provider_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="transaction_receiver_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="transaction_receiver_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_receiver_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_receiver_org_receiver_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_receiver_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_disbursement_channel_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="transaction_sector_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="transaction_sector_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_sector_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_sector_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_sector_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="transaction_recipient_country_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="transaction_recipient_country_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_recipient_country_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="transaction_recipient_region_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="transaction_recipient_region_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_recipient_region_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_recipient_region_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="transaction_recipient_region_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -305,30 +305,30 @@
     <field name="transaction_date_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="value" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="description" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="provider_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="provider_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_provider_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="receiver_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="receiver_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_receiver_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="disbursement_channel_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="sector_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="sector_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="sector_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="recipient_country_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="recipient_country_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_country_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="recipient_region_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="recipient_region_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="recipient_region_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="flow_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="finance_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="aid_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -363,11 +363,11 @@
     <field name="exactness_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="location_class_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="feature_designation_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="tag_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="tag_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="tag_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="tag_vocabulary" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="tag_vocabulary_uri" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="country_budget_items_budget_item_description" type="text_general" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="country_budget_items_budget_item_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="country_budget_items_budget_item_percentage" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -500,12 +500,12 @@
     <field name="dimension" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="comment" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="document_link" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="conditions_condition_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="conditions_condition_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="conditions_condition_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="conditions_attached" type="boolean" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="condition_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="condition_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="condition_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="budget_period_start_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="budget_period_end_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="budget_value" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -517,11 +517,11 @@
     <field name="planned_disbursement_period_start_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_period_end_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_value" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="planned_disbursement_provider_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="planned_disbursement_provider_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_provider_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_provider_org_provider_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_provider_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="planned_disbursement_receiver_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="planned_disbursement_receiver_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_receiver_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_receiver_org_receiver_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="planned_disbursement_receiver_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
@@ -529,16 +529,16 @@
     <field name="period_start_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="period_end_iso_date" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="value" type="pdoubles" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="provider_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="provider_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_provider_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="provider_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="receiver_org_narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="receiver_org_narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_ref" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_receiver_activity_id" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="receiver_org_type" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
-    <field name="narrative" type="iati-narrative" multiValued="true" indexed="true" required="false" stored="true"/>
+    <field name="narrative" type="iati_narrative" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="crs_add_other_flags_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="crs_add_other_flags_significance" type="boolean" multiValued="true" indexed="true" required="false" stored="true"/>
     <field name="crs_add_loan_terms_repayment_type_code" type="string" multiValued="true" indexed="true" required="false" stored="true"/>
