@@ -75,7 +75,18 @@ module.exports = {
                     parentCanonicalName
                 );
 
-                if (node.childNodes.length === 1) {
+                let add = true;
+
+                for (let i = 0; i < node.childNodes.length; i += 1) {
+                    if (node.childNodes[i].constructor.name === 'Element') {
+                        // xmldom includes the text of all child elements in textcontent,
+                        // so believes parents of children with text have text themselves,
+                        // and we don't want to add those parents, so:
+                        add = false;
+                    }
+                }
+
+                if (add) {
                     module.exports.addToIatiObject(canonicalName, node.textContent);
                 }
 
