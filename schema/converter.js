@@ -136,6 +136,11 @@ module.exports = {
     setToDefaultElements: async () => {
         module.exports.solrSchemaObjects = [
             {
+                canonicalName: 'iati_activities_document_hash',
+                type: 'string',
+                required: true,
+            },
+            {
                 canonicalName: 'dataset_iati_version',
                 type: 'string',
                 required: true,

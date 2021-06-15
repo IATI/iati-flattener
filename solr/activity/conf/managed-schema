@@ -106,6 +106,7 @@
     <fieldType name="_nest_path_" class="solr.NestPathField" />
     <field name="_text_" type="text_general" indexed="true" stored="false" multiValued="true"/>
     <!---Activity Core Start-->
+    <field name="iati_activities_document_hash" type="string" multiValued="true" indexed="true" required="true" stored="true"/>
     <field name="dataset_iati_version" type="string" multiValued="true" indexed="true" required="true" stored="true"/>
     <field name="dataset_date_created" type="pdate" multiValued="true" indexed="true" required="true" stored="true"/>
     <field name="dataset_date_updated" type="pdate" multiValued="true" indexed="true" required="false" stored="true"/>
