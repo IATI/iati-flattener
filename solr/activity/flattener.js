@@ -75,7 +75,9 @@ module.exports = {
                     parentCanonicalName
                 );
 
-                module.exports.addToIatiObject(canonicalName, node.textContent);
+                if (node.childNodes.length === 1) {
+                    module.exports.addToIatiObject(canonicalName, node.textContent);
+                }
 
                 for (let i = 0; i < node.attributes.length; i += 1) {
                     const att = node.attributes[i];
