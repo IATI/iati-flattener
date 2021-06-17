@@ -143,12 +143,12 @@ module.exports = {
             {
                 canonicalName: 'dataset_iati_version',
                 type: 'string',
-                required: true,
+                required: false,
             },
             {
                 canonicalName: 'dataset_date_created',
                 type: 'pdate',
-                required: true,
+                required: false,
             },
             {
                 canonicalName: 'dataset_date_updated',
