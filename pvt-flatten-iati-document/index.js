@@ -38,12 +38,7 @@ module.exports = async (context, req) => {
         return;
     }
 
-    // Replace vertical tab, formfeed, nextline, line separator, paragraph separator with plain new line
-    /* eslint-disable no-control-regex */
-    const invalidCharRegex = /[\x0B\x0C\u0085\u2028\u2029]+/gi;
-    /* eslint-enable no-control-regex */
-
-    const xmlDoc = new DOMParser().parseFromString(body.replace(invalidCharRegex, '\n'));
+    const xmlDoc = new DOMParser().parseFromString(body);
 
     let activities = xmlDoc.getElementsByTagName('iati-activities')[0];
 
