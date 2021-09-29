@@ -1,4 +1,4 @@
-const { DOMParser } = require('xmldom');
+const { DOMParser } = require('@xmldom/xmldom');
 const config = require('../config/config');
 const activityFlattener = require('../solr/activity/flattener');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');

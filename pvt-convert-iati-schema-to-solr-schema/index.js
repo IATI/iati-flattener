@@ -1,4 +1,4 @@
-const { DOMParser } = require('xmldom');
+const { DOMParser } = require('@xmldom/xmldom');
 const config = require('../config/config');
 const schemaConverter = require('../schema/converter');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
