@@ -1,7 +1,7 @@
 {
-    "name": "azure-function-node-microservice-template",
+    "name": "IATI document flattener",
     "version": "0.0.0",
-    "description": "",
+    "description": "Flattens IATI documents in preparation to be indexed into Solr",
     "scripts": {
         "start": "func start --javascript",
         "start:verbose": "func start --javascript --verbose",
@@ -14,7 +14,7 @@
         "dotenv": "^10.0.0",
         "libxmljs2": "^0.28.0",
         "solr-client": "^0.9.0",
-        "xmldom": "^0.6.0"
+        "@xmldom/xmldom": "^0.7.5"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^1.1.0",
@@ -29,5 +29,9 @@
     "lint-staged": {
         "*.js": "eslint --cache --fix",
         "*.{js,css,md}": "prettier --write"
+    },
+    "engines": {
+        "node": ">=14 <15",
+        "npm": ">=7"
     }
 }
