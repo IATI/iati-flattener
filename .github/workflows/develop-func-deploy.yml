@@ -10,7 +10,7 @@ on:
 
 env:
   STAGE: dev # prefix to indicate environment stage
-  NAME: iati-flattener  
+  NAME: iati-flattener
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
 
@@ -25,23 +25,12 @@ jobs:
         uses: actions/setup-node@v2.4.1
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Cache node modules
-        uses: actions/cache@v2.1.6
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          cache: 'npm'
 
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
+          npm i -g npm
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm install
           popd
@@ -57,17 +46,17 @@ jobs:
           app-name: ${{ env.NAME }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-  integration-test:
-    needs: build-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2
+  # integration-test:
+  #   needs: build-deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 'Checkout GitHub Action'
+  #       uses: actions/checkout@v2
 
-      - name: 'Install newman'
-        run: |
-          npm i newman
+  #     - name: 'Install newman'
+  #       run: |
+  #         npm i newman
 
-      #- name: 'Run integration tests' # Update -e environment file with an environment that points to your deployed instance
-      #  run: |
-      #    newman run integration-tests/UPDATE_ME.postman_collection.json -e integration-tests/envs/UPDATE_ME.postman_environment.json --working-dir integration-tests/test-files
+  #     - name: 'Run integration tests' # Update -e environment file with an environment that points to your deployed instance
+  #      run: |
+  #        newman run integration-tests/UPDATE_ME.postman_collection.json -e integration-tests/envs/UPDATE_ME.postman_environment.json --working-dir integration-tests/test-files
