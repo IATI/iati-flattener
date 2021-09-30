@@ -14,7 +14,7 @@ module.exports = async (context, req) => {
             : 'This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.'
     }`;
 
-    const { body } = req;
+    let { body } = req;
 
     // No body
     if (!body || JSON.stringify(body) === '{}') {
@@ -36,6 +36,15 @@ module.exports = async (context, req) => {
         };
 
         return;
+    }
+    // Replace vertical tab, formfeed, nextline, line separator, paragraph separator with plain new line
+
+    // eslint-disable-next-line no-control-regex
+    const invalidCharRegex = /[\x0B\x0C\u0085\u2028\u2029]+/gi;
+
+    if (invalidCharRegex.test(body)) {
+        client.trackTrace({ message: 'Invalid Character found and replaced' });
+        body = body.replace(invalidCharRegex, '\n');
     }
 
     const xmlDoc = new DOMParser().parseFromString(body);
