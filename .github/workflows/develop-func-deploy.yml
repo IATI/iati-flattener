@@ -32,7 +32,8 @@ jobs:
         run: |
           npm i -g npm
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
+          npm set-script prepare "" 
+          npm install --production
           popd
 
       - name: 'Login via Azure CLI'

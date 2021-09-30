@@ -27,7 +27,8 @@ jobs:
       - name: 'Install Dependencies with Npm'
         run: |
           npm i -g npm
-          npm install
+          npm set-script prepare "" 
+          npm install --production
 
   automerge:
     needs: build
