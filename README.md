@@ -2,7 +2,7 @@
 
 This Azure Function provides various services to allow us to index IATI documents to Solr, including a service to convert the IATI schema into a consistent Solr schema, and a service that when given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
 
-Both these services follow the convention of reducing Activity documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible velue-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
+Both these services follow the convention of reducing Activity documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible value-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
@@ -90,11 +90,31 @@ let myEnvVariable = config.ENV_VAR
 
 Takes an IATI XML schema as the body, and returns a valid Solr schema rean Acivity core presenting to include all possible elements and attributes which may include a value, with their types converted from XSD to an appropriate Solr type.
 
-## Endpoints /api
+### `POST /api/pvt/convert-schema-to-config`
+
+Takes an IATI XML schema as the body, and returns a valid Solr `solrconfig.xml`. Currently used to modify the default `fl` query parameter to output only iati elements (in iati order) by default.
 
 ### `POST /api/pvt/flatten/activities`
 
 Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity core, as defined by converting the IATI XML schema using the `POST /api/pvt/convert-schema` route.
+
+## Updating Solr Configset
+
+Run convert- routes with IATI Schema, place results:
+
+-   schema - `solr/activity/conf/managed-schema`
+-   config - `solr/activity/conf/solrconfig.xml`
+
+Zip up configset for a collection
+`(cd solr/activity/conf && zip -r - *) > activityconfigset.zip`
+
+Update it in the solr instance
+`PUT /api/cluster/configs/activityconfigset`
+
+-   Body is activityconfigset.zip
+
+Reload the collection config for it to take effect
+`GET /solr/admin/collections?action=RELOAD&name=activity`
 
 ## Creating a new route
 

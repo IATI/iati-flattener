@@ -187,6 +187,32 @@ module.exports = {
         return schema;
     },
 
+    buildSolrConfigXML: async () => {
+        let xmlString = '';
+
+        const fieldString = module.exports.solrSchemaObjects.map((obj) => obj.canonicalName).join();
+
+        xmlString = `<str name="fl">${fieldString}</str>`;
+
+        let tpl;
+        let solrconfig = null;
+
+        fs.readFile(`${__dirname}/solrconfig_template.xml`, (error, data) => {
+            if (error) {
+                throw error;
+            }
+            tpl = data.toString();
+
+            solrconfig = tpl.replace('#ADDITIONAL_DEFAULTS#', xmlString);
+        });
+
+        while (solrconfig === null) {
+            await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+
+        return solrconfig;
+    },
+
     getSolrSchemaFromIatiSchema: async (iatiSchema) => {
         const elements = iatiSchema.getElementsByTagName('xsd:element');
 
@@ -199,5 +225,19 @@ module.exports = {
         const schema = await module.exports.buildSolrSchemaXML();
 
         return schema;
+    },
+
+    getSolrConfigFromIatiSchema: async (iatiSchema) => {
+        const elements = iatiSchema.getElementsByTagName('xsd:element');
+
+        module.exports.setToDefaultElements();
+
+        for (let i = 0; i < elements.length; i += 1) {
+            await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
+        }
+
+        const solrConfig = await module.exports.buildSolrConfigXML();
+
+        return solrConfig;
     },
 };
