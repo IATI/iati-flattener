@@ -120,17 +120,17 @@ module.exports = {
                         module.exports.addToIatiObject(existingAtt, '', true);
                     }
                 }
-            }
+            } else {
+                for (let i = 0; i < node.attributes.length; i += 1) {
+                    const att = node.attributes[i];
 
-            for (let i = 0; i < node.attributes.length; i += 1) {
-                const att = node.attributes[i];
+                    const canonicalAttName = module.exports.convertNameToCanonical(
+                        att.nodeName,
+                        canonicalName
+                    );
 
-                const canonicalAttName = module.exports.convertNameToCanonical(
-                    att.nodeName,
-                    canonicalName
-                );
-
-                module.exports.addToIatiObject(canonicalAttName, att.nodeValue);
+                    module.exports.addToIatiObject(canonicalAttName, att.nodeValue);
+                }
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
