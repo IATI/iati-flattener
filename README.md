@@ -100,21 +100,7 @@ Takes a valid iati-activities XML document as the body and returns a json array 
 
 ## Updating Solr Configset
 
-Run convert- routes with IATI Schema, place results:
-
--   schema - `solr/activity/conf/managed-schema`
--   config - `solr/activity/conf/solrconfig.xml`
-
-Zip up configset for a collection
-`(cd solr/activity/conf && zip -r - *) > activityconfigset.zip`
-
-Update it in the solr instance
-`PUT /api/cluster/configs/activityconfigset`
-
--   Body is activityconfigset.zip
-
-Reload the collection config for it to take effect
-`GET /solr/admin/collections?action=RELOAD&name=activity`
+See https://github.com/IATI/datastore-solr-configs
 
 ## Creating a new route
 
