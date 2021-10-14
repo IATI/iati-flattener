@@ -1,0 +1,17 @@
+{
+    "bindings": [
+        {
+            "authLevel": "Function",
+            "type": "HttpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": ["post"],
+            "route": "pvt/convert-schema-to-config"
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res"
+        }
+    ]
+}

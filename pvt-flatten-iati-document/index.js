@@ -1,5 +1,5 @@
 const { DOMParser } = require('@xmldom/xmldom');
-const activityFlattener = require('../solr/activity/flattener');
+const activityFlattener = require('../services/activity/flattener');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
