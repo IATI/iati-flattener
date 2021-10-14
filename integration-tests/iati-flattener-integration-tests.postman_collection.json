@@ -535,6 +535,187 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "POST /pvt/convert-schema-to-config",
+			"item": [
+				{
+					"name": "400",
+					"item": [
+						{
+							"name": "No Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: no body\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"No body\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: Body must be an application/xml string\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be an application/xml string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"fake\": \"iati\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "200",
+					"item": [
+						{
+							"name": "Convert IATI Activities Schema",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Content-Type header contains application/xml\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.contain('application/xml');",
+											"});",
+											"var jsonObject = xml2Json(responseBody);",
+											"pm.test(\"requestHandler /select exists\", function () {",
+											"    pm.expect(jsonObject.config.requestHandler[0].$.name).to.eql(\"/select\");",
+											"});",
+											"pm.test(\"requestHandler has an fl override\", function () {",
+											"    pm.expect(jsonObject.config.requestHandler[0].lst.str[1].$.name).to.eql(\"fl\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "iati-activities-schema.xsd"
+									},
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema-to-config"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
 		}
 	]
 }
