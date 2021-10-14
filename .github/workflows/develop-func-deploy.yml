@@ -10,9 +10,11 @@ on:
 
 env:
   STAGE: dev # prefix to indicate environment stage
-  NAME: iati-flattener
+  NAME: func-iati-flattener
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '14.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  AZURE_CREDENTIALS: ${{ secrets.DEV_AZURE_CREDENTIALS }}
+  API_KEY: ${{ secrets.DEV_FLATTENER_API_KEY }}
 
 jobs:
   build-deploy:
@@ -39,25 +41,29 @@ jobs:
       - name: 'Login via Azure CLI'
         uses: azure/login@v1.3.0
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }} # Service Principal credentials saved in GitHub Secrets
+          creds: ${{ env.AZURE_CREDENTIALS }} # Service Principal credentials saved in GitHub Secrets
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1.4.4
         with:
-          app-name: ${{ env.NAME }}
+          app-name: ${{ env.NAME }}-${{ env.STAGE }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          respect-funcignore: true
 
-  # integration-test:
-  #   needs: build-deploy
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 'Checkout GitHub Action'
-  #       uses: actions/checkout@v2
+  integration-test:
+    needs: build-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
 
-  #     - name: 'Install newman'
-  #       run: |
-  #         npm i newman
+      - name: 'Install newman'
+        run: |
+          sudo npm i -g newman
 
-  #     - name: 'Run integration tests' # Update -e environment file with an environment that points to your deployed instance
-  #      run: |
-  #        newman run integration-tests/UPDATE_ME.postman_collection.json -e integration-tests/envs/UPDATE_ME.postman_environment.json --working-dir integration-tests/test-files
+      - name: 'Run integration tests'
+        run: |
+          newman run integration-tests/iati-flattener-integration-tests.postman_collection.json \
+            -e integration-tests/envs/func-iati-flattener-dev.postman_environment.json \
+            --working-dir integration-tests/test-files \
+            --env-var keyValue=$API_KEY

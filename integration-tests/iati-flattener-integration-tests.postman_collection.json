@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "bf399db5-0951-4820-b4d5-1ea6f56767cc",
+		"name": "iati-flattener-integration-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST /pvt/flatten/activities",
+			"item": [
+				{
+					"name": "400",
+					"item": [
+						{
+							"name": "No Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: no body\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"No body\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: Body must be an application/xml string\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be an application/xml string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"fake\": \"iati\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "422",
+					"item": [
+						{
+							"name": "Not IATI XML",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: No iati-activities element found - is this an organisations doc?\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"No iati-activities element found - is this an organisations doc?\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<not-iati-xml></not-iati-xml>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "200",
+					"item": [
+						{
+							"name": "IATI XML - Activity Checks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains 1 activity\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.length).to.eql(1);",
+											"});",
+											"pm.test(\"The activity object contains 12 keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect( Object.keys(jsonData[0]).length).to.equal(12);",
+											"});",
+											"pm.test(\"title_narrative_xml:lang attribute is flattened appropriately, in order\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[0][\"title_narrative_xml:lang\"].join()).to.eql(\",fr,es\")",
+											"});",
+											"pm.test(\"reporting_org_narrative element is flattened appropriately, in order\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[0][\"reporting_org_narrative\"].join()).to.eql(\"Organisation name,Nom de l'organisme\")",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IATI XML - Multiple Activity",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains 2 activities\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.length).to.eql(2);",
+											"});",
+											"pm.test(\"Each activity object contains 5 keys\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.every((act) => Object.keys(act).length === 5)).to.be.true;",
+											"});",
+											"pm.test(\"The activities iati_identifier elements are present\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.map((act) => act.iati_identifier)).to.eql(['ACT-1', 'ACT-2']);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n    </iati-activity>\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-2</iati-identifier>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IATI XML - Multiple Transactions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"transaction_ref attribute is flattened appropriately, in order\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[0].transaction_ref.join()).to.eql(\"1234,5678\")",
+											"});",
+											"pm.test(\"transaction_transaction_date_iso_date element is flattened appropriately, in order\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData[0].transaction_transaction_date_iso_date.join()).to.eql(\"2012-01-01,2013-01-01\")",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities>\n    <iati-activity>\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n        <transaction ref=\"1234\" humanitarian=\"1\">\n            <transaction-type code=\"1\" />\n            <transaction-date iso-date=\"2012-01-01\" />\n        </transaction>\n        <transaction ref=\"5678\">\n            <transaction-type code=\"2\" />\n            <transaction-date iso-date=\"2013-01-01\" />\n        </transaction>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "POST /pvt/convert-schema",
+			"item": [
+				{
+					"name": "400",
+					"item": [
+						{
+							"name": "No Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: no body\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"No body\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: Body must be an application/xml string\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be an application/xml string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"fake\": \"iati\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "200",
+					"item": [
+						{
+							"name": "Convert IATI Activities Schema",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Content-Type header contains application/xml\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.contain('application/xml');",
+											"});",
+											"var jsonObject = xml2Json(responseBody);",
+											"pm.test(\"name of solr config schema is default-config\", function () {",
+											"    pm.expect(jsonObject.schema.$.name).to.eql(\"default-config\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "iati-activities-schema.xsd"
+									},
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "POST /pvt/convert-schema-to-config",
+			"item": [
+				{
+					"name": "400",
+					"item": [
+						{
+							"name": "No Body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: no body\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"No body\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: Body must be an application/xml string\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be an application/xml string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \"fake\": \"iati\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "200",
+					"item": [
+						{
+							"name": "Convert IATI Activities Schema",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Content-Type header contains application/xml\", () => {",
+											"  pm.expect(pm.response.headers.get('Content-Type')).to.contain('application/xml');",
+											"});",
+											"var jsonObject = xml2Json(responseBody);",
+											"pm.test(\"requestHandler /select exists\", function () {",
+											"    pm.expect(jsonObject.config.requestHandler[0].$.name).to.eql(\"/select\");",
+											"});",
+											"pm.test(\"requestHandler has an fl override\", function () {",
+											"    pm.expect(jsonObject.config.requestHandler[0].lst.str[1].$.name).to.eql(\"fl\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "iati-activities-schema.xsd"
+									},
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema-to-config"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{keyValue}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "{{keyName}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
