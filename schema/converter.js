@@ -38,6 +38,7 @@ module.exports = {
         solrElement.canonicalName = parentCanonicalName;
         solrElement.type = null;
         solrElement.required = false;
+        solrElement.multiValued = true;
 
         let addElement = false;
 
@@ -88,6 +89,13 @@ module.exports = {
                             element.attributes[i].nodeValue
                         );
                         break;
+
+                    case 'maxOccurs':
+                        if (element.attributes[i].nodeValue === '1') {
+                            solrElement.multiValued = false;
+                        }
+
+                        break;
                     default:
                         break;
                 }
@@ -102,6 +110,7 @@ module.exports = {
                 module.exports.solrSchemaObjects.push(solrElement);
             }
         }
+
         if (Object.prototype.hasOwnProperty.call(element, 'attributes')) {
             for (let i = 0; i < element.childNodes.length; i += 1) {
                 await module.exports.buildSolrSchemaFromIatiElement(
@@ -139,21 +148,25 @@ module.exports = {
                 canonicalName: 'iati_activities_document_hash',
                 type: 'string',
                 required: true,
+                multiValued: false,
             },
             {
                 canonicalName: 'dataset_iati_version',
                 type: 'string',
                 required: false,
+                multiValued: false,
             },
             {
                 canonicalName: 'dataset_date_created',
                 type: 'pdate',
                 required: false,
+                multiValued: false,
             },
             {
                 canonicalName: 'dataset_date_updated',
                 type: 'pdate',
                 required: false,
+                multiValued: false,
             },
         ];
     },
@@ -165,7 +178,8 @@ module.exports = {
             const name = module.exports.solrSchemaObjects[i].canonicalName;
             const { type } = module.exports.solrSchemaObjects[i];
             const { required } = module.exports.solrSchemaObjects[i];
-            xmlString += `<field name="${name}" type="${type}" multiValued="true" indexed="true" required="${required}" stored="true"/>\n`;
+            const { multiValued } = module.exports.solrSchemaObjects[i];
+            xmlString += `<field name="${name}" type="${type}" multiValued="${multiValued}" indexed="true" required="${required}" stored="true"/>\n`;
         }
 
         let tpl;

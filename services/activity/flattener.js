@@ -165,8 +165,3 @@ module.exports = {
         return retval;
     },
 };
-// #Q Unclear as to what is supposed to be in the field types with the following suffixes
-
-// 'reporting_org'
-// 'reporting_org_xml'
-// 'reporting_org_narrative_text' - when we've already got reporting org narrative
