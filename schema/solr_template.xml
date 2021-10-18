@@ -32,7 +32,7 @@
     catchall "text" field, and use that for searching.
 -->
 
-<schema name="default-config" version="1.6">
+<schema name="activity-config" version="1.6">
     <!-- attribute "name" is the name of this schema and is only used for display purposes.
        version="x.y" is Solr's version number for the schema syntax and
        semantics.  It should not normally be changed by applications.
@@ -117,6 +117,10 @@
     #ACTIVITY_CORE#
     <!---Activty Core End-->
 
+
+    <!-- IATI Dynamic Field Definitions -->
+    <dynamicField name="*_xml:lang" type="string" indexed="true" stored="true"/>
+
     <!-- This can be enabled, in case the client does not know what fields may be searched. It isn't enabled by default
          because it's very expensive to index everything twice. -->
     <!-- <copyField source="*" dest="_text_"/> -->
@@ -157,6 +161,9 @@
     <dynamicField name="*_dps" type="delimited_payloads_string" indexed="true"  stored="true"/>
 
     <dynamicField name="attr_*" type="text_general" indexed="true" stored="true" multiValued="true"/>
+
+    <!-- Fully generic dynamic field -->
+    <dynamicField name="*" type="strings" multiValued="true" indexed="false" stored="true"/>
 
     <!-- Field to use to determine and enforce document uniqueness.
       Unless this field is marked with required="false", it will be a required field
