@@ -475,8 +475,8 @@
 											"  pm.expect(pm.response.headers.get('Content-Type')).to.contain('application/xml');",
 											"});",
 											"var jsonObject = xml2Json(responseBody);",
-											"pm.test(\"name of solr config schema is default-config\", function () {",
-											"    pm.expect(jsonObject.schema.$.name).to.eql(\"default-config\");",
+											"pm.test(\"name of solr config schema is activity-config\", function () {",
+											"    pm.expect(jsonObject.schema.$.name).to.eql(\"activity-config\");",
 											"});"
 										],
 										"type": "text/javascript"
