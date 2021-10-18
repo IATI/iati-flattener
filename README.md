@@ -84,6 +84,10 @@ let myEnvVariable = config.ENV_VAR
 -   This is done with eslint following the airbnb-base style and using [Prettier](https://prettier.io). Implemented with [this](https://sourcelevel.io/blog/how-to-setup-eslint-and-prettier-on-node) guide.
 -   If you use VSCode the formatting will happen automagically on save due to the `.vscode/settings.json` > `"editor.formatOnSave": true` setting
 
+## Schema Prep (Flattening)
+
+The IATI Activities Schema is `iati-activities-schema.xsd` which `xsd:include`'s `iati-common.xsd` to allow our Schema converter to not have to understand that relationship you can "flatten" the schema before converting it using: https://github.com/pkielgithub/SchemaLightener
+
 ## Endpoints /api
 
 ### `POST /api/pvt/convert-schema`
