@@ -237,6 +237,65 @@
 							"response": []
 						},
 						{
+							"name": "IATI XML - Date Format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// @iso-date, @value-date, @extraction-date",
+											"const re = new RegExp(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z/)",
+											"const jsonData = pm.response.json()[0];",
+											"pm.test(\"iso_dates are in solr format\", function () {",
+											"    ",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('iso_date')).every((key) => {",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											"pm.test(\"value_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('value_date')).every((key) => {",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											"pm.test(\"extraction_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('extraction_date')).every((key) => {",
+											"        console.log(re.test(jsonData[key]))",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n\n        <budget type=\"1\" status=\"1\">\n            <period-start iso-date=\"2014-01-01\" />\n            <period-end iso-date=\"2014-12-31\" />\n            <value currency=\"EUR\" value-date=\"2014-01-01\">3000</value>\n        </budget>\n\n        <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n            <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n        </fss>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "IATI XML - Multiple Activity",
 							"event": [
 								{
@@ -299,7 +358,7 @@
 											"});",
 											"pm.test(\"transaction_transaction_date_iso_date element is flattened appropriately, in order\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData[0].transaction_transaction_date_iso_date.join()).to.eql(\"2012-01-01,2013-01-01\")",
+											"    pm.expect(jsonData[0].transaction_transaction_date_iso_date.join()).to.eql(\"2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z\")",
 											"});"
 										],
 										"type": "text/javascript"
@@ -477,6 +536,12 @@
 											"var jsonObject = xml2Json(responseBody);",
 											"pm.test(\"name of solr config schema is activity-config\", function () {",
 											"    pm.expect(jsonObject.schema.$.name).to.eql(\"activity-config\");",
+											"});",
+											"pm.test(\"Schema contains element fields iati_identifier,reporting_org\", function () {",
+											"    pm.expect(jsonObject.schema.field.map((field) => field.$.name)).to.contain(\"iati_identifier\",\"reporting_org\");",
+											"});",
+											"pm.test(\"Schema contains attribute field reporting_org_ref, participating_org_ref\", function () {",
+											"    pm.expect(jsonObject.schema.field.map((field) => field.$.name)).to.contain(\"reporting_org_ref\",\"participating_org_ref\");",
 											"});"
 										],
 										"type": "text/javascript"
@@ -489,12 +554,7 @@
 								"body": {
 									"mode": "file",
 									"file": {
-										"src": "iati-activities-schema.xsd"
-									},
-									"options": {
-										"raw": {
-											"language": "xml"
-										}
+										"src": "iati-activities-schema-flat.xsd"
 									}
 								},
 								"url": {
@@ -671,11 +731,6 @@
 									"mode": "file",
 									"file": {
 										"src": "iati-activities-schema.xsd"
-									},
-									"options": {
-										"raw": {
-											"language": "xml"
-										}
 									}
 								},
 								"url": {
