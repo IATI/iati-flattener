@@ -12,6 +12,14 @@ module.exports = {
         }
 
         if (
+            ['iso_date', 'value_date', 'extraction_date'].some((dateVal) =>
+                canonicalName.includes(dateVal)
+            )
+        ) {
+            value = new Date(value).toISOString();
+        }
+
+        if (
             canonicalName in module.exports.iatiObject &&
             !(module.exports.iatiObject[canonicalName] instanceof Array)
         ) {
