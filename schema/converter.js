@@ -37,85 +37,89 @@ module.exports = {
     buildAttributeFromElement: async (element) => {
         let attribute = { name: null, type: null };
 
-        if (Object.prototype.hasOwnProperty.call(element, 'attributes')) {
-            for (let i = 0; i < element.attributes.length; i += 1) {
-                switch (element.attributes[i].name) {
-                    case 'name':
-                    case 'ref':
-                        attribute['name'] = element.attributes[i].value;
-                        break;
-                    case 'type':
-                        attribute['type'] = await module.exports.convertXsdTypeToSolr(
-                            element.attributes[i].value
-                        );
-                        break;
-                    default:
-                        break;
-                }
+        if (!Object.prototype.hasOwnProperty.call(element, 'attributes')) {
+            return;
+        }
+
+        for (let i = 0; i < element.attributes.length; i += 1) {
+            switch (element.attributes[i].name) {
+                case 'name':
+                case 'ref':
+                    attribute['name'] = element.attributes[i].value;
+                    break;
+                case 'type':
+                    attribute['type'] = await module.exports.convertXsdTypeToSolr(
+                        element.attributes[i].value
+                    );
+                    break;
+                default:
+                    break;
             }
         }
 
-        if (attribute.name !== null && attribute.type !== null) {
-            let add = true;
+        if (attribute.name === null || attribute.type === null) {
+            return;
+        }
 
-            for (let i = 0; i < module.exports.iatiXsdAttributes.length; i += 1) {
-                if (attribute.name === module.exports.iatiXsdAttributes[i].name) {
-                    add = false;
-                    break;
-                }
-            }
+        let add = true;
 
-            if (add) {
-                module.exports.iatiXsdAttributes.push(attribute);
+        for (let i = 0; i < module.exports.iatiXsdAttributes.length; i += 1) {
+            if (attribute.name === module.exports.iatiXsdAttributes[i].name) {
+                add = false;
+                break;
             }
+        }
+
+        if (add) {
+            module.exports.iatiXsdAttributes.push(attribute);
         }
     },
 
     buildComplexTypeFromElement: async (element) => {
         let complexType = {};
 
-        if (Object.prototype.hasOwnProperty.call(element, 'attributes')) {
-            for (let i = 0; i < element.attributes.length; i += 1) {
-                if (element.attributes[i].name === 'name') {
-                    complexType['name'] = element.attributes[i].value;
-                    complexType['attributes'] = [];
+        if (!Object.prototype.hasOwnProperty.call(element, 'attributes')) {
+            return;
+        }
 
-                    const attributes = element.getElementsByTagName('xsd:attribute');
+        for (let i = 0; i < element.attributes.length; i += 1) {
+            if (element.attributes[i].name !== 'name') {
+                continue;
+            }
 
-                    for (let n = 0; n < attributes.length; n += 1) {
-                        for (let x = 0; x < attributes[n].attributes.length; x += 1) {
-                            let type = null;
+            complexType['name'] = element.attributes[i].value;
+            complexType['attributes'] = [];
 
-                            switch (attributes[n].attributes[x].name) {
-                                case 'name':
-                                case 'ref':
-                                    for (
-                                        let y = 0;
-                                        y < module.exports.iatiXsdAttributes.length;
-                                        y += 1
-                                    ) {
-                                        if (
-                                            module.exports.iatiXsdAttributes[y].name ===
-                                            attributes[n].attributes[x].value
-                                        ) {
-                                            type = module.exports.iatiXsdAttributes[y].type;
-                                        }
-                                    }
+            const attributes = element.getElementsByTagName('xsd:attribute');
 
-                                    complexType['attributes'].push({
-                                        name: attributes[n].attributes[x].value,
-                                        type: type,
-                                    });
-                                    break;
-                                default:
-                                    break;
+            for (let n = 0; n < attributes.length; n += 1) {
+                for (let x = 0; x < attributes[n].attributes.length; x += 1) {
+                    let type = null;
+
+                    switch (attributes[n].attributes[x].name) {
+                        case 'name':
+                        case 'ref':
+                            for (let y = 0; y < module.exports.iatiXsdAttributes.length; y += 1) {
+                                if (
+                                    module.exports.iatiXsdAttributes[y].name ===
+                                    attributes[n].attributes[x].value
+                                ) {
+                                    type = module.exports.iatiXsdAttributes[y].type;
+                                }
                             }
-                        }
-                    }
 
-                    module.exports.iatiXsdComplexTypes.push(complexType);
+                            complexType['attributes'].push({
+                                name: attributes[n].attributes[x].value,
+                                type: type,
+                            });
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+
+            module.exports.iatiXsdComplexTypes.push(complexType);
         }
     },
 
