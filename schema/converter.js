@@ -380,7 +380,7 @@ module.exports = {
         return solrconfig;
     },
 
-    getSolrSchemaFromIatiSchema: async (iatiSchema) => {
+    buildSchemaRepresentation: async (iatiSchema) => {
         const iatiXsdAttributes = iatiSchema.getElementsByTagName('xsd:attribute');
 
         for (let i = 0; i < iatiXsdAttributes.length; i += 1) {
@@ -400,6 +400,10 @@ module.exports = {
         for (let i = 0; i < elements.length; i += 1) {
             await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
         }
+    },
+
+    getSolrSchemaFromIatiSchema: async (iatiSchema) => {
+        await module.exports.buildSchemaRepresentation(iatiSchema);
 
         const schema = await module.exports.buildSolrSchemaXML();
 
@@ -407,13 +411,7 @@ module.exports = {
     },
 
     getSolrConfigFromIatiSchema: async (iatiSchema) => {
-        const elements = iatiSchema.getElementsByTagName('xsd:element');
-
-        module.exports.setToDefaultElements();
-
-        for (let i = 0; i < elements.length; i += 1) {
-            await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
-        }
+        await module.exports.buildSchemaRepresentation(iatiSchema);
 
         const solrConfig = await module.exports.buildSolrConfigXML();
 
