@@ -35,7 +35,7 @@ module.exports = {
     },
 
     buildAttributeFromElement: async (element) => {
-        let attribute = { name: null, type: null };
+        const attribute = { name: null, type: null };
 
         if (!Object.prototype.hasOwnProperty.call(element, 'attributes')) {
             return;
@@ -45,10 +45,10 @@ module.exports = {
             switch (element.attributes[i].name) {
                 case 'name':
                 case 'ref':
-                    attribute['name'] = element.attributes[i].value;
+                    attribute.name = element.attributes[i].value;
                     break;
                 case 'type':
-                    attribute['type'] = await module.exports.convertXsdTypeToSolr(
+                    attribute.type = await module.exports.convertXsdTypeToSolr(
                         element.attributes[i].value
                     );
                     break;
@@ -76,7 +76,7 @@ module.exports = {
     },
 
     buildComplexTypeFromElement: async (element) => {
-        let complexType = {};
+        const complexType = {};
 
         if (!Object.prototype.hasOwnProperty.call(element, 'attributes')) {
             return;
@@ -87,8 +87,8 @@ module.exports = {
                 continue;
             }
 
-            complexType['name'] = element.attributes[i].value;
-            complexType['attributes'] = [];
+            complexType.name = element.attributes[i].value;
+            complexType.attributes = [];
 
             const attributes = element.getElementsByTagName('xsd:attribute');
 
@@ -108,9 +108,9 @@ module.exports = {
                                 }
                             }
 
-                            complexType['attributes'].push({
+                            complexType.attributes.push({
                                 name: attributes[n].attributes[x].value,
-                                type: type,
+                                type,
                             });
                             break;
                         default:
@@ -195,10 +195,14 @@ module.exports = {
                                 module.exports.iatiXsdComplexTypes[n].name ===
                                 element.attributes[i].nodeValue
                             ) {
-                                let complexType = module.exports.iatiXsdComplexTypes[n];
+                                const complexType = module.exports.iatiXsdComplexTypes[n];
 
                                 for (let x = 0; x < complexType.attributes.length; x += 1) {
-                                    let ctSolrElement = {};
+                                    const ctSolrElement = {};
+
+                                    ctSolrElement.type = null;
+                                    ctSolrElement.required = false;
+                                    ctSolrElement.multiValued = true;
 
                                     ctSolrElement.canonicalName =
                                         await module.exports.convertNameToCanonical(
