@@ -354,12 +354,36 @@ module.exports = {
         return schema;
     },
 
-    buildSolrConfigXML: async () => {
-        let xmlString = '';
+    buildSolrConfigXML: async (mainSchema) => {
+        const mainElements = mainSchema.getElementsByTagName('xsd:element');
 
-        const fieldString = module.exports.solrSchemaObjects.map((obj) => obj.canonicalName).join();
+        const canonicalNames = [];
+        const origNames = ['iati-activities', 'dataset'];
+        for (let i = 0; i < mainElements.length; i += 1) {
+            const name =
+                mainElements[i].getAttribute('name') || mainElements[i].getAttribute('ref');
+            if (name !== '' && origNames.indexOf(name) === -1 && name !== 'iati-activities') {
+                origNames.push(name);
+                canonicalNames.push(name.replace(/-/g, '_'));
+            }
+        }
+        const allFieldNames = module.exports.solrSchemaObjects.map((obj) => obj.canonicalName);
 
-        xmlString = `<str name="fl">${fieldString}</str>`;
+        const fields = canonicalNames.reduce((acc, name) => {
+            while (allFieldNames.findIndex((field) => field.startsWith(name)) !== -1) {
+                const exacti = allFieldNames.indexOf(name);
+                const prei = allFieldNames.findIndex((field) => field.startsWith(name));
+                const i = exacti !== -1 ? exacti : prei;
+                acc.push(allFieldNames[i]);
+                allFieldNames.splice(i, 1);
+            }
+            return acc;
+        }, []);
+
+        // concat the remaining allFieldNames on the front as they are the attributes of the root
+        const final = allFieldNames.concat(fields);
+
+        const xmlString = `<str name="fl">${final.join()}</str>`;
 
         let tpl;
         let solrconfig = null;
@@ -380,7 +404,7 @@ module.exports = {
         return solrconfig;
     },
 
-    getSolrSchemaFromIatiSchema: async (iatiSchema) => {
+    buildSchemaRepresentation: async (iatiSchema) => {
         const iatiXsdAttributes = iatiSchema.getElementsByTagName('xsd:attribute');
 
         for (let i = 0; i < iatiXsdAttributes.length; i += 1) {
@@ -400,22 +424,20 @@ module.exports = {
         for (let i = 0; i < elements.length; i += 1) {
             await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
         }
+    },
+
+    getSolrSchemaFromIatiSchema: async (iatiSchema) => {
+        await module.exports.buildSchemaRepresentation(iatiSchema);
 
         const schema = await module.exports.buildSolrSchemaXML();
 
         return schema;
     },
 
-    getSolrConfigFromIatiSchema: async (iatiSchema) => {
-        const elements = iatiSchema.getElementsByTagName('xsd:element');
+    getSolrConfigFromIatiSchema: async (combinedSchema, mainSchema) => {
+        await module.exports.buildSchemaRepresentation(combinedSchema);
 
-        module.exports.setToDefaultElements();
-
-        for (let i = 0; i < elements.length; i += 1) {
-            await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
-        }
-
-        const solrConfig = await module.exports.buildSolrConfigXML();
+        const solrConfig = await module.exports.buildSolrConfigXML(mainSchema);
 
         return solrConfig;
     },

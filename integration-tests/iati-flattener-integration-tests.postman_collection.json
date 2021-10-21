@@ -537,12 +537,14 @@
 											"pm.test(\"name of solr config schema is activity-config\", function () {",
 											"    pm.expect(jsonObject.schema.$.name).to.eql(\"activity-config\");",
 											"});",
+											"const fields = jsonObject.schema.field.map((field) => field.$.name)",
 											"pm.test(\"Schema contains element fields iati_identifier,reporting_org\", function () {",
-											"    pm.expect(jsonObject.schema.field.map((field) => field.$.name)).to.contain(\"iati_identifier\",\"reporting_org\");",
+											"    pm.expect(fields).to.contain(\"iati_identifier\",\"reporting_org\");",
 											"});",
 											"pm.test(\"Schema contains attribute field reporting_org_ref, participating_org_ref\", function () {",
-											"    pm.expect(jsonObject.schema.field.map((field) => field.$.name)).to.contain(\"reporting_org_ref\",\"participating_org_ref\");",
-											"});"
+											"    pm.expect(fields).to.contain(\"reporting_org_ref\",\"participating_org_ref\");",
+											"});",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -622,28 +624,28 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseURL}}/pvt/convert-schema",
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
 									"host": [
 										"{{baseURL}}"
 									],
 									"path": [
 										"pvt",
-										"convert-schema"
+										"convert-schema-to-config"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Wrong type of body",
+							"name": "Wrong type of body - Object",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Body contains error: Body must be an application/xml string\", function () {",
+											"pm.test(\"Body contains error: Body must be a multipart form of application/xml files\", function () {",
 											"    var jsonData = pm.response.json();",
-											"    pm.expect(jsonData.error).to.eql(\"Body must be an application/xml string\");",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be a multipart form of application/xml files\");",
 											"});"
 										],
 										"type": "text/javascript"
@@ -663,13 +665,117 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseURL}}/pvt/convert-schema",
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
 									"host": [
 										"{{baseURL}}"
 									],
 									"path": [
 										"pvt",
-										"convert-schema"
+										"convert-schema-to-config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body - Form Filetype",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: Body must be a multipart form of application/xml files\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"Body must be a multipart form of application/xml files\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "main",
+											"type": "file",
+											"src": "CHANGES.txt"
+										},
+										{
+											"key": "common",
+											"type": "file",
+											"src": "iati-common.xsd"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema-to-config"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong type of body - Form File Key main",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Body contains error: There should be one file with a key of \\\"main\\\"\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.error).to.eql(\"There should be one file with a key of \\\"main\\\"\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "thing",
+											"type": "file",
+											"src": "iati-common.xsd"
+										},
+										{
+											"key": "common",
+											"type": "file",
+											"src": "iati-common.xsd"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"convert-schema-to-config"
 									]
 								}
 							},
@@ -712,13 +818,21 @@
 											"pm.test(\"Content-Type header contains application/xml\", () => {",
 											"  pm.expect(pm.response.headers.get('Content-Type')).to.contain('application/xml');",
 											"});",
-											"var jsonObject = xml2Json(responseBody);",
+											"const jsonObject = xml2Json(responseBody);",
 											"pm.test(\"requestHandler /select exists\", function () {",
 											"    pm.expect(jsonObject.config.requestHandler[0].$.name).to.eql(\"/select\");",
 											"});",
 											"pm.test(\"requestHandler has an fl override\", function () {",
 											"    pm.expect(jsonObject.config.requestHandler[0].lst.str[1].$.name).to.eql(\"fl\");",
-											"});"
+											"});",
+											"const respText = pm.response.text();",
+											"pm.test(\"reporting_org elements are in order\", function () {",
+											"    pm.expect(respText).to.include(\"reporting_org_narrative,reporting_org_ref,reporting_org_type,reporting_org_secondary_reporter,\");",
+											"});",
+											"pm.test(\"document level elements are at beginning of fl\", function () {",
+											"    pm.expect(respText).to.include(\"\\<str name=\\\"fl\\\"\\>iati_activities_document_hash,dataset_iati_version,dataset_date_created,dataset_date_updated\");",
+											"});",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -728,10 +842,19 @@
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "file",
-									"file": {
-										"src": "iati-activities-schema.xsd"
-									}
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "main",
+											"type": "file",
+											"src": "iati-activities-schema.xsd"
+										},
+										{
+											"key": "common",
+											"type": "file",
+											"src": "iati-common.xsd"
+										}
+									]
 								},
 								"url": {
 									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
