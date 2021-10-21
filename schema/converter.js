@@ -123,13 +123,22 @@ module.exports = {
         }
     },
 
-    buildSolrSchemaFromIatiElement: async (element, parentCanonicalName = null) => {
+    buildSolrSchemaFromIatiElement: async (
+        element,
+        parentCanonicalName = null,
+        multiValued = null
+    ) => {
         const solrElement = {};
 
         solrElement.canonicalName = parentCanonicalName;
         solrElement.type = null;
         solrElement.required = false;
-        solrElement.multiValued = true;
+
+        if (multiValued === null) {
+            solrElement.multiValued = true;
+        } else {
+            solrElement.multiValued = multiValued;
+        }
 
         let addElement = false;
 
@@ -244,11 +253,17 @@ module.exports = {
                         break;
 
                     case 'maxOccurs':
-                        if (element.attributes[i].nodeValue === '1') {
-                            solrElement.multiValued = false;
+                        if (parentCanonicalName === null) {
+                            //Otherwise, we inherit from the parent
+                            if (element.attributes[i].nodeValue === '1') {
+                                solrElement.multiValued = false;
+                            } else {
+                                solrElement.multiValued = true;
+                            }
                         }
 
                         break;
+
                     default:
                         break;
                 }
@@ -268,7 +283,8 @@ module.exports = {
             for (let i = 0; i < element.childNodes.length; i += 1) {
                 await module.exports.buildSolrSchemaFromIatiElement(
                     element.childNodes[i],
-                    solrElement.canonicalName
+                    solrElement.canonicalName,
+                    solrElement.multiValued
                 );
             }
         }
