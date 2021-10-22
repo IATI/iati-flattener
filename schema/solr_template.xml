@@ -104,7 +104,7 @@
 
 
     <!-- IATI Dynamic Field Definitions -->
-    <dynamicField name="*_xml:lang" type="string" indexed="true" stored="true"/>
+    <dynamicField name="*_xml:lang" type="string" multiValued="true" indexed="true" stored="true"/>
 
     <!-- This can be enabled, in case the client does not know what fields may be searched. It isn't enabled by default
          because it's very expensive to index everything twice. -->
