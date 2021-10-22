@@ -11,11 +11,7 @@ module.exports = {
             }
         }
 
-        if (
-            ['iso_date', 'value_date', 'extraction_date'].some((dateVal) =>
-                canonicalName.includes(dateVal)
-            )
-        ) {
+        if (['_date'].some((dateVal) => canonicalName.includes(dateVal))) {
             value = new Date(value).toISOString();
         }
 
@@ -160,9 +156,10 @@ module.exports = {
 
     getFlattenedObjectForActivityNode: async (activity, dateCreated, version) => {
         module.exports.iatiObject.dataset_iati_version = version;
-        module.exports.iatiObject.dataset_last_updated =
-            activity.getAttribute('last-updated-datetime');
-        module.exports.iatiObject.dataset_date_created = dateCreated;
+        module.exports.iatiObject.dataset_last_updated = new Date(
+            activity.getAttribute('last-updated-datetime')
+        ).toISOString();
+        module.exports.iatiObject.dataset_date_created = new Date(dateCreated).toISOString();
 
         await module.exports.buildIatiObject(activity);
 
