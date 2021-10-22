@@ -435,10 +435,51 @@ module.exports = {
 
         const elements = iatiSchema.getElementsByTagName('xsd:element');
 
-        module.exports.setToDefaultElements();
+        //Get only top level elements
+
+        let activityEl = null;
 
         for (let i = 0; i < elements.length; i += 1) {
-            await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
+            for (let n = 0; n < elements[i].attributes.length; n += 1) {
+                if (
+                    elements[i].attributes[n].name === 'name' &&
+                    elements[i].attributes[n].nodeValue === 'iati-activity'
+                ) {
+                    activityEl = elements[i];
+                }
+            }
+        }
+
+        module.exports.setToDefaultElements();
+        const topLevelElements = activityEl.getElementsByTagName('xsd:element');
+
+        for (let i = 0; i < elements.length; i += 1) {
+            let build = false;
+            let target = null;
+            for (let n = 0; n < elements[i].attributes.length; n += 1) {
+                if (
+                    elements[i].attributes[n].name === 'ref' ||
+                    elements[i].attributes[n].name === 'name'
+                ) {
+                    target = elements[i].attributes[n].nodeValue;
+                }
+            }
+
+            for (let n = 0; n < topLevelElements.length; n += 1) {
+                for (let x = 0; x < topLevelElements[n].attributes.length; x += 1) {
+                    if (
+                        (topLevelElements[n].attributes[x].name === 'ref' ||
+                            topLevelElements[n].attributes[x].name === 'name') &&
+                        topLevelElements[n].attributes[x].nodeValue === target
+                    ) {
+                        build = true;
+                    }
+                }
+            }
+
+            if (build) {
+                await module.exports.buildSolrSchemaFromIatiElement(elements[i]);
+            }
         }
     },
 
