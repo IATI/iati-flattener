@@ -95,6 +95,8 @@
     <!-- id will be the hash of the flattened document before ingested into solr, e.g. activity -->
 
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+    <!-- docValues are enabled by default for long type so we don't need to index the version field  -->
+    <field name="_version_" type="plong" indexed="false" stored="false"/>
     
     <!---Activity Core Start-->
     #ACTIVITY_CORE#

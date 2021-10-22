@@ -12,7 +12,8 @@
     "dependencies": {
         "@xmldom/xmldom": "^0.7.5",
         "applicationinsights": "^2.1.8",
-        "dotenv": "^10.0.0"
+        "dotenv": "^10.0.0",
+        "multipart-formdata": "^1.1.0"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^1.1.0",
@@ -20,7 +21,7 @@
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.25.2",
-        "husky": "^7.0.2",
+        "husky": "^7.0.4",
         "lint-staged": "^11.2.3",
         "prettier": "^2.4.1"
     },
