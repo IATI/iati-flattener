@@ -263,6 +263,15 @@
 											"        return re.test(jsonData[key])",
 											"    })).to.be.true",
 											"});",
+											"",
+											"// @last-updated-datetime",
+											"pm.test(\"extraction_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('_datetime')).every((key) => {",
+											"        console.log(re.test(jsonData[key]))",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											"",
 											""
 										],
 										"type": "text/javascript"
@@ -274,7 +283,66 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n\n        <budget type=\"1\" status=\"1\">\n            <period-start iso-date=\"2014-01-01\" />\n            <period-end iso-date=\"2014-12-31\" />\n            <value currency=\"EUR\" value-date=\"2014-01-01\">3000</value>\n        </budget>\n\n        <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n            <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n        </fss>\n    </iati-activity>\n</iati-activities>",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:20:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n\n        <budget type=\"1\" status=\"1\">\n            <period-start iso-date=\"2014-01-01\" />\n            <period-end iso-date=\"2014-12-31\" />\n            <value currency=\"EUR\" value-date=\"2014-01-01\">3000</value>\n        </budget>\n\n        <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n            <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n        </fss>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IATI XML - Date Format No datetimes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// @iso-date, @value-date, @extraction-date",
+											"const re = new RegExp(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z/)",
+											"const jsonData = pm.response.json()[0];",
+											"pm.test(\"iso_dates are in solr format\", function () {",
+											"    ",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('iso_date')).every((key) => {",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											"pm.test(\"value_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('value_date')).every((key) => {",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											"pm.test(\"extraction_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('extraction_date')).every((key) => {",
+											"        console.log(re.test(jsonData[key]))",
+											"        return re.test(jsonData[key])",
+											"    })).to.be.true",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities version=\"2.03\">\n    <iati-activity >\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n\n        <budget type=\"1\" status=\"1\">\n            <period-start iso-date=\"2014-01-01\" />\n            <period-end iso-date=\"2014-12-31\" />\n            <value currency=\"EUR\" value-date=\"2014-01-01\">3000</value>\n        </budget>\n\n        <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n            <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n        </fss>\n    </iati-activity>\n</iati-activities>",
 									"options": {
 										"raw": {
 											"language": "xml"
@@ -709,12 +777,7 @@
 											"type": "file",
 											"src": "iati-common.xsd"
 										}
-									],
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
@@ -761,12 +824,7 @@
 											"type": "file",
 											"src": "iati-common.xsd"
 										}
-									],
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{baseURL}}/pvt/convert-schema-to-config",
