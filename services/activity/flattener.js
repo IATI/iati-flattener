@@ -11,8 +11,21 @@ module.exports = {
             }
         }
 
-        if (['_date'].some((dateVal) => canonicalName.includes(dateVal))) {
-            value = new Date(value).toISOString();
+        if (
+            ['iso_date', 'value_date', 'extraction_date', '_datetime'].some((dateVal) =>
+                canonicalName.includes(dateVal)
+            )
+        ) {
+            try {
+                value = new Date(value).toISOString();
+            } catch (error) {
+                console.error(
+                    `Could not convert date for field: ${canonicalName}, value: ${value}. Error: ${error}`
+                );
+                throw new Error(
+                    `Could not convert date for field: ${canonicalName}, value: ${value}. Error: ${error}`
+                );
+            }
         }
 
         if (
@@ -156,10 +169,20 @@ module.exports = {
 
     getFlattenedObjectForActivityNode: async (activity, dateCreated, version) => {
         module.exports.iatiObject.dataset_iati_version = version;
-        module.exports.iatiObject.dataset_last_updated = new Date(
-            activity.getAttribute('last-updated-datetime')
-        ).toISOString();
-        module.exports.iatiObject.dataset_date_created = new Date(dateCreated).toISOString();
+        // last-updated-datetime and dateCreated are not required fields in the Schema so need to handle "" values with Date conversion
+        const lastUpdatedDateTime = activity.getAttribute('last-updated-datetime');
+        if (lastUpdatedDateTime) {
+            module.exports.iatiObject.dataset_last_updated = new Date(
+                lastUpdatedDateTime
+            ).toISOString();
+        } else {
+            module.exports.iatiObject.dataset_last_updated = '';
+        }
+        if (dateCreated) {
+            module.exports.iatiObject.dataset_date_created = new Date(dateCreated).toISOString();
+        } else {
+            module.exports.iatiObject.dataset_date_created = '';
+        }
 
         await module.exports.buildIatiObject(activity);
 
