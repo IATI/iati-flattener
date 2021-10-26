@@ -1,5 +1,5 @@
 const { DOMParser } = require('@xmldom/xmldom');
-const activityFlattener = require('../services/activity/flattener');
+const { ActivityFlattener } = require('../services/activity/flattener');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
@@ -58,6 +58,7 @@ module.exports = async (context, req) => {
     const flattenedActivities = [];
     activities = xmlDoc.getElementsByTagName('iati-activity');
 
+    const activityFlattener = new ActivityFlattener();
     for (let i = 0; i < activities.length; i += 1) {
         const activity = activities[i];
 
