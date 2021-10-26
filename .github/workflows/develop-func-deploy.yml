@@ -62,6 +62,6 @@ jobs:
       - name: 'Run integration tests'
         run: |
           newman run integration-tests/iati-flattener-integration-tests.postman_collection.json \
-            -e integration-tests/envs/func-iati-flattener-dev.postman_environment.json \
+            -e integration-tests/envs/func-iatiflattener-dev.postman_environment.json \
             --working-dir integration-tests/test-files \
             --env-var keyValue=$API_KEY
