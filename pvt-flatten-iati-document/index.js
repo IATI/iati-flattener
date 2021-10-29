@@ -59,9 +59,9 @@ module.exports = async (context, req) => {
     const flattenedActivities = [];
     activities = xmlDoc.getElementsByTagName('iati-activity');
 
-    const activityFlattener = new ActivityFlattener();
     for (let i = 0; i < activities.length; i += 1) {
         const activity = activities[i];
+        const activityFlattener = new ActivityFlattener();
 
         flattenedActivities[i] = await activityFlattener.getFlattenedObjectForActivityNode(
             activity,

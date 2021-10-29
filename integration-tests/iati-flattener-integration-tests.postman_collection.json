@@ -339,25 +339,33 @@
 							"response": []
 						},
 						{
-							"name": "IATI XML - Sector Percentage Mid Blanks",
+							"name": "IATI XML - Sector Percentage 2 Activities",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
 											"const jsonData = pm.response.json();",
-											"pm.test(\"Body contains 1 activity\", function () {",
-											"    pm.expect(jsonData.length).to.eql(1);",
+											"pm.test(\"Body contains 2 activity\", function () {",
+											"    pm.expect(jsonData.length).to.eql(2);",
 											"});",
 											"pm.test(\"The activity object contains 7 keys\", function () {",
 											"    pm.expect(Object.keys(jsonData[0]).length).to.equal(7);",
 											"});",
-											"pm.test(\"sector_code attribute is flattened appropriately, in order\", function () {",
+											"pm.test(\"first activity sector_code attribute is flattened appropriately, in order\", function () {",
 											"    pm.expect(jsonData[0][\"sector_code\"].join()).to.eql(\"52010,P13\")",
 											"});",
-											"pm.test(\"sector_vocabulary element is flattened appropriately, in order\", function () {",
+											"pm.test(\"first activity sector_vocabulary element is flattened appropriately, in order\", function () {",
 											"    pm.expect(jsonData[0][\"sector_vocabulary\"].join()).to.eql(\",99\")",
 											"});",
+											"pm.test(\"second activity sector_vocabulary element is not present\", function () {",
+											"    pm.expect(Object.keys(jsonData[1])).to.not.contain(\"sector_vocabulary\")",
+											"});",
+											"pm.test(\"second activity sector_percentage element is not present\", function () {",
+											"    pm.expect(Object.keys(jsonData[1])).to.not.contain(\"sector_percentage\")",
+											"});",
+											"",
+											"",
 											""
 										],
 										"type": "text/javascript"
@@ -369,7 +377,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52010\"/>\n        <sector code=\"P13\" vocabulary=\"99\" percentage=\"100\"/>\n    </iati-activity>\n</iati-activities>",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52010\"/>\n        <sector code=\"P13\" vocabulary=\"99\" percentage=\"100\"/>\n    </iati-activity>\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52999\"/>\n        <sector code=\"P15\" />\n    </iati-activity>\n</iati-activities>",
 									"options": {
 										"raw": {
 											"language": "xml"
