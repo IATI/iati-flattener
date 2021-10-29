@@ -237,6 +237,54 @@
 							"response": []
 						},
 						{
+							"name": "IATI XML - Full Activities Doc",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.test(\"Body contains 1 activity\", function () {",
+											"    pm.expect(jsonData.length).to.eql(1);",
+											"});",
+											"pm.test(\"The activity object contains 249 keys\", function () {",
+											"    pm.expect( Object.keys(jsonData[0]).length).to.equal(249);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "iati-act-no-errors.xml"
+									},
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "IATI XML - Sector Percentage Blanks",
 							"event": [
 								{
