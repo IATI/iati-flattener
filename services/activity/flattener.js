@@ -30,6 +30,20 @@ class ActivityFlattener {
             }
         }
 
+        // handle empty numbers values for multivalued fields
+        if (
+            value === '' &&
+            [
+                'sector_percentage',
+                'recipient_country_percentage',
+                'recipient_region_percentage',
+                'country_budget_items_budget_item_percentage',
+                'fss_forecast_year',
+            ].includes(canonicalName)
+        ) {
+            value = 'NaN';
+        }
+
         if (
             canonicalName in this.iatiObject &&
             !(this.iatiObject[canonicalName] instanceof Array)
