@@ -173,21 +173,16 @@ class ActivityFlattener {
         activity,
         { generatedDatetime, version, linkedDataDefault }
     ) {
-        this.iatiObject.dataset_iati_version = version;
+        // required
+        this.iatiObject.dataset_version = version;
+
+        // not required
         if (linkedDataDefault) {
             this.iatiObject.dataset_linked_data_default = linkedDataDefault;
         }
-        // last-updated-datetime and dateCreated are not required fields in the Schema so need to handle "" values with Date conversion
-        const lastUpdatedDateTime = activity.getAttribute('last-updated-datetime');
-        if (lastUpdatedDateTime) {
-            this.iatiObject.dataset_last_updated = new Date(lastUpdatedDateTime).toISOString();
-        } else {
-            this.iatiObject.dataset_last_updated = '';
-        }
+
         if (generatedDatetime) {
-            this.iatiObject.dataset_date_created = new Date(generatedDatetime).toISOString();
-        } else {
-            this.iatiObject.dataset_date_created = '';
+            this.iatiObject.dataset_generated_datetime = new Date(generatedDatetime).toISOString();
         }
 
         await this.buildIatiObject(activity);
