@@ -53,7 +53,8 @@ module.exports = async (context, req) => {
     }
 
     const version = activities.getAttribute('version');
-    const generated = activities.getAttribute('generated-datetime');
+    const generatedDatetime = activities.getAttribute('generated-datetime');
+    const linkedDataDefault = activities.getAttribute('linked-data-default');
 
     const flattenedActivities = [];
     activities = xmlDoc.getElementsByTagName('iati-activity');
@@ -64,8 +65,7 @@ module.exports = async (context, req) => {
 
         flattenedActivities[i] = await activityFlattener.getFlattenedObjectForActivityNode(
             activity,
-            generated,
-            version
+            { generatedDatetime, version, linkedDataDefault }
         );
     }
 
