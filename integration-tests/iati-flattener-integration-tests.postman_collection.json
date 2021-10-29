@@ -339,6 +339,61 @@
 							"response": []
 						},
 						{
+							"name": "IATI XML - NaN for Numeric Multivalued Blanks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.test(\"Body contains 1 activity\", function () {",
+											"    pm.expect(jsonData.length).to.eql(1);",
+											"});",
+											"pm.test(\"The activity object contains 24 keys\", function () {",
+											"    pm.expect(Object.keys(jsonData[0]).length).to.equal(24);",
+											"});",
+											"pm.test(\"sector_code attribute is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"sector_code\"].join()).to.eql(\"52010,P13\")",
+											"});",
+											"pm.test(\"sector_vocabulary element is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"sector_vocabulary\"].join()).to.eql(\",99\")",
+											"});",
+											"pm.test(\"All multivalued pdoubles fields with an empty value have a NaN\", function () {",
+											"    pm.expect( ['sector_percentage', 'recipient_country_percentage', 'recipient_region_percentage','country_budget_items_budget_item_percentage','fss_forecast_year'].map((field) => jsonData[0][field]).every((result) => result.includes('NaN'))).to.be.true",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52010\"/>\n        <sector code=\"P13\" vocabulary=\"99\" percentage=\"5\"/>\n        <recipient-country code=\"AF\"/>\n        <recipient-country code=\"AG\" percentage=\"25\" />\n        <recipient-region code=\"489\" vocabulary=\"1\" percentage=\"50\" />\n        <recipient-region code=\"A1\" vocabulary=\"99\" vocabulary-uri=\"http://example.com/vocab.html\" />\n        <country-budget-items vocabulary=\"4\">\n   <budget-item code=\"1844\" percentage=\"50\">\n    <description>\n     <narrative>Description text</narrative>\n    </description>\n   </budget-item>\n   <budget-item code=\"1900\" >\n    <description>\n     <narrative>Description text</narrative>\n    </description>\n   </budget-item>\n  </country-budget-items>\n  <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n   <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n   <forecast value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n  </fss>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "IATI XML - Sector Percentage 2 Activities",
 							"event": [
 								{
@@ -357,6 +412,9 @@
 											"});",
 											"pm.test(\"first activity sector_vocabulary element is flattened appropriately, in order\", function () {",
 											"    pm.expect(jsonData[0][\"sector_vocabulary\"].join()).to.eql(\",99\")",
+											"});",
+											"pm.test(\"first activity sector_percentage element is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"sector_percentage\"].join()).to.eql(\"NaN,100\")",
 											"});",
 											"pm.test(\"second activity sector_vocabulary element is not present\", function () {",
 											"    pm.expect(Object.keys(jsonData[1])).to.not.contain(\"sector_vocabulary\")",
