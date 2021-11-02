@@ -196,8 +196,8 @@
 											"pm.test(\"The activity object contains 12 keys\", function () {",
 											"    pm.expect( Object.keys(jsonData[0]).length).to.equal(12);",
 											"});",
-											"pm.test(\"title_narrative_xml:lang attribute is flattened appropriately, in order\", function () {",
-											"    pm.expect(jsonData[0][\"title_narrative_xml:lang\"].join()).to.eql(\",fr,es\")",
+											"pm.test(\"title_narrative_xml_lang attribute is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"title_narrative_xml_lang\"].join()).to.eql(\",fr,es\")",
 											"});",
 											"pm.test(\"reporting_org_narrative element is flattened appropriately, in order\", function () {",
 											"    pm.expect(jsonData[0][\"reporting_org_narrative\"].join()).to.eql(\"Organisation name,Nom de l'organisme\")",
@@ -263,11 +263,6 @@
 									"mode": "file",
 									"file": {
 										"src": "iati-act-no-errors.xml"
-									},
-									"options": {
-										"raw": {
-											"language": "xml"
-										}
 									}
 								},
 								"url": {
