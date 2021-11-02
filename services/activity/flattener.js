@@ -179,6 +179,7 @@ class ActivityFlattener {
             retval = `${parentNodeCanonical}_${retval}`;
         }
         retval = retval.replace(/-/g, '_');
+        retval = retval.replace(/:/g, '_');
 
         return retval;
     }
