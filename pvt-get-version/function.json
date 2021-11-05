@@ -1,0 +1,19 @@
+{
+  "bindings": [
+    {
+      "authLevel": "Function",
+      "type": "HttpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get"
+      ],
+      "route": "pvt/version"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ]
+}

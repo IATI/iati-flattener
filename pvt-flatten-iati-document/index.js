@@ -1,5 +1,5 @@
 const { DOMParser } = require('@xmldom/xmldom');
-const activityFlattener = require('../services/activity/flattener');
+const { ActivityFlattener } = require('../services/activity/flattener');
 const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
 
 module.exports = async (context, req) => {
@@ -53,18 +53,19 @@ module.exports = async (context, req) => {
     }
 
     const version = activities.getAttribute('version');
-    const generated = activities.getAttribute('generated-datetime');
+    const generatedDatetime = activities.getAttribute('generated-datetime');
+    const linkedDataDefault = activities.getAttribute('linked-data-default');
 
     const flattenedActivities = [];
     activities = xmlDoc.getElementsByTagName('iati-activity');
 
     for (let i = 0; i < activities.length; i += 1) {
         const activity = activities[i];
+        const activityFlattener = new ActivityFlattener();
 
         flattenedActivities[i] = await activityFlattener.getFlattenedObjectForActivityNode(
             activity,
-            generated,
-            version
+            { generatedDatetime, version, linkedDataDefault }
         );
     }
 

@@ -1,8 +1,10 @@
-module.exports = {
-    iatiMap: {},
-    iatiObject: {},
+class ActivityFlattener {
+    constructor() {
+        this.iatiMap = {};
+        this.iatiObject = {};
+    }
 
-    addToIatiObject: async (canonicalName, value, allowEmpty = false) => {
+    async addToIatiObject(canonicalName, value, allowEmpty = false) {
         value = value.trim();
 
         if (!allowEmpty) {
@@ -11,70 +13,97 @@ module.exports = {
             }
         }
 
-        if (['_date'].some((dateVal) => canonicalName.includes(dateVal))) {
-            value = new Date(value).toISOString();
+        if (
+            ['iso_date', 'value_date', 'extraction_date', '_datetime'].some((dateVal) =>
+                canonicalName.includes(dateVal)
+            )
+        ) {
+            try {
+                value = new Date(value).toISOString();
+            } catch (error) {
+                console.error(
+                    `Could not convert date for field: ${canonicalName}, value: ${value}. Error: ${error}`
+                );
+                throw new Error(
+                    `Could not convert date for field: ${canonicalName}, value: ${value}. Error: ${error}`
+                );
+            }
+        }
+
+        // handle empty numbers values for multivalued fields
+        if (
+            value === '' &&
+            [
+                'sector_percentage',
+                'recipient_country_percentage',
+                'recipient_region_percentage',
+                'country_budget_items_budget_item_percentage',
+                'fss_forecast_year',
+            ].includes(canonicalName)
+        ) {
+            value = 'NaN';
         }
 
         if (
-            canonicalName in module.exports.iatiObject &&
-            !(module.exports.iatiObject[canonicalName] instanceof Array)
+            canonicalName in this.iatiObject &&
+            !(this.iatiObject[canonicalName] instanceof Array)
         ) {
-            module.exports.iatiObject[canonicalName] = [module.exports.iatiObject[canonicalName]];
-            module.exports.iatiObject[canonicalName].push(value);
+            this.iatiObject[canonicalName] = [this.iatiObject[canonicalName]];
+            this.iatiObject[canonicalName].push(value);
         } else if (
-            canonicalName in module.exports.iatiObject &&
-            module.exports.iatiObject[canonicalName] instanceof Array
+            canonicalName in this.iatiObject &&
+            this.iatiObject[canonicalName] instanceof Array
         ) {
-            module.exports.iatiObject[canonicalName].push(value);
+            this.iatiObject[canonicalName].push(value);
         } else {
-            module.exports.iatiObject[canonicalName] = value;
+            this.iatiObject[canonicalName] = value;
         }
-    },
+    }
 
-    mapIatiObject: async (node, parentCanonicalName = null) => {
+    async mapIatiObject(node, parentCanonicalName = null) {
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
             let canonicalName = null;
 
             if (node.nodeName !== 'iati-activity') {
-                canonicalName = module.exports.convertNameToCanonical(
+                canonicalName = ActivityFlattener.convertNameToCanonical(
                     node.nodeName,
                     parentCanonicalName
                 );
 
-                if (!(canonicalName in module.exports.iatiMap)) {
-                    module.exports.iatiMap[canonicalName] = [];
+                if (!(canonicalName in this.iatiMap)) {
+                    this.iatiMap[canonicalName] = [];
                 }
 
                 for (let i = 0; i < node.attributes.length; i += 1) {
                     const att = node.attributes[i];
 
-                    const canonicalAttName = module.exports.convertNameToCanonical(
+                    const canonicalAttName = ActivityFlattener.convertNameToCanonical(
                         att.nodeName,
                         canonicalName
                     );
 
-                    if (!module.exports.iatiMap[canonicalName].includes(canonicalAttName)) {
-                        module.exports.iatiMap[canonicalName].push(canonicalAttName);
+                    if (!this.iatiMap[canonicalName].includes(canonicalAttName)) {
+                        this.iatiMap[canonicalName].push(canonicalAttName);
                     }
                 }
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
-                await module.exports.mapIatiObject(node.childNodes[i], canonicalName);
+                await this.mapIatiObject(node.childNodes[i], canonicalName);
             }
         }
-    },
+    }
 
-    buildIatiObject: async (node, parentCanonicalName = null, map = true) => {
+    async buildIatiObject(node, parentCanonicalName = null, map = true) {
         if (map) {
-            await module.exports.mapIatiObject(node);
+            await this.mapIatiObject(node);
         }
 
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
             let canonicalName = null;
 
             if (node.nodeName !== 'iati-activity') {
-                canonicalName = module.exports.convertNameToCanonical(
+                canonicalName = ActivityFlattener.convertNameToCanonical(
                     node.nodeName,
                     parentCanonicalName
                 );
@@ -91,18 +120,18 @@ module.exports = {
                 }
 
                 if (add) {
-                    module.exports.addToIatiObject(canonicalName, node.textContent);
+                    this.addToIatiObject(canonicalName, node.textContent);
                 }
 
                 for (let i = 0; i < node.attributes.length; i += 1) {
                     const att = node.attributes[i];
 
-                    const canonicalAttName = module.exports.convertNameToCanonical(
+                    const canonicalAttName = ActivityFlattener.convertNameToCanonical(
                         att.nodeName,
                         canonicalName
                     );
 
-                    module.exports.addToIatiObject(canonicalAttName, att.nodeValue);
+                    this.addToIatiObject(canonicalAttName, att.nodeValue);
                 }
                 // As per the previous DS, each array of attribute values for an element
                 // needs the same number of elements, regardless as to whether the attribute exists for that element,
@@ -110,7 +139,7 @@ module.exports = {
                 const attributes = [];
 
                 for (let n = 0; n < node.attributes.length; n += 1) {
-                    const canonicalAttName = module.exports.convertNameToCanonical(
+                    const canonicalAttName = ActivityFlattener.convertNameToCanonical(
                         node.attributes[n].nodeName,
                         canonicalName
                     );
@@ -118,55 +147,67 @@ module.exports = {
                     attributes.push(canonicalAttName);
                 }
 
-                for (let i = 0; i < module.exports.iatiMap[canonicalName].length; i += 1) {
-                    const existingAtt = module.exports.iatiMap[canonicalName][i];
+                for (let i = 0; i < this.iatiMap[canonicalName].length; i += 1) {
+                    const existingAtt = this.iatiMap[canonicalName][i];
                     if (!attributes.includes(existingAtt)) {
-                        module.exports.addToIatiObject(existingAtt, '', true);
+                        this.addToIatiObject(existingAtt, '', true);
                     }
                 }
             } else {
                 for (let i = 0; i < node.attributes.length; i += 1) {
                     const att = node.attributes[i];
 
-                    const canonicalAttName = module.exports.convertNameToCanonical(
+                    const canonicalAttName = ActivityFlattener.convertNameToCanonical(
                         att.nodeName,
                         canonicalName
                     );
 
-                    module.exports.addToIatiObject(canonicalAttName, att.nodeValue);
+                    this.addToIatiObject(canonicalAttName, att.nodeValue);
                 }
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
-                module.exports.buildIatiObject(node.childNodes[i], canonicalName, false);
+                this.buildIatiObject(node.childNodes[i], canonicalName, false);
             }
         }
-    },
+    }
 
-    convertNameToCanonical: (nodeName, parentNodeCanonical = null) => {
+    static convertNameToCanonical(nodeName, parentNodeCanonical = null) {
         let retval = nodeName;
 
         if (parentNodeCanonical) {
             retval = `${parentNodeCanonical}_${retval}`;
         }
         retval = retval.replace(/-/g, '_');
+        retval = retval.replace(/:/g, '_');
 
         return retval;
-    },
+    }
 
-    getFlattenedObjectForActivityNode: async (activity, dateCreated, version) => {
-        module.exports.iatiObject.dataset_iati_version = version;
-        module.exports.iatiObject.dataset_last_updated = new Date(
-            activity.getAttribute('last-updated-datetime')
-        ).toISOString();
-        module.exports.iatiObject.dataset_date_created = new Date(dateCreated).toISOString();
+    async getFlattenedObjectForActivityNode(
+        activity,
+        { generatedDatetime, version, linkedDataDefault }
+    ) {
+        // required
+        this.iatiObject.dataset_version = version;
 
-        await module.exports.buildIatiObject(activity);
+        // not required
+        if (linkedDataDefault) {
+            this.iatiObject.dataset_linked_data_default = linkedDataDefault;
+        }
 
-        const retval = module.exports.iatiObject;
+        if (generatedDatetime) {
+            this.iatiObject.dataset_generated_datetime = new Date(generatedDatetime).toISOString();
+        }
 
-        module.exports.iatiObject = {};
+        await this.buildIatiObject(activity);
+
+        const retval = this.iatiObject;
+
+        this.iatiObject = {};
 
         return retval;
-    },
-};
+    }
+}
+
+module.exports = { ActivityFlattener };

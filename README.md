@@ -1,3 +1,5 @@
+[![Deploy_To_Dev_Function_On_Push](https://github.com/IATI/iati-flattener/actions/workflows/develop-func-deploy.yml/badge.svg)](https://github.com/IATI/iati-flattener/actions/workflows/develop-func-deploy.yml)
+
 # IATI Solr Functions
 
 This Azure Function provides various services to allow us to index IATI documents to Solr, including a service to convert the IATI schema into a consistent Solr schema, and a service that when given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
