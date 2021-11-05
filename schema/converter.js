@@ -254,7 +254,7 @@ module.exports = {
 
                     case 'maxOccurs':
                         if (parentCanonicalName === null) {
-                            //Otherwise, we inherit from the parent
+                            // Otherwise, we inherit from the parent
                             if (element.attributes[i].nodeValue === '1') {
                                 solrElement.multiValued = false;
                             } else {
@@ -314,7 +314,7 @@ module.exports = {
     setToDefaultElements: async () => {
         module.exports.solrSchemaObjects = [
             {
-                canonicalName: 'iati_activities_document_hash',
+                canonicalName: 'iati_activities_document_id',
                 type: 'string',
                 required: true,
                 multiValued: false,
@@ -435,7 +435,7 @@ module.exports = {
 
         const elements = iatiSchema.getElementsByTagName('xsd:element');
 
-        //Get only top level elements
+        // Get only top level elements
 
         let activityEl = null;
 

@@ -830,7 +830,7 @@
 											"    pm.expect(respText).to.include(\"reporting_org_narrative,reporting_org_ref,reporting_org_type,reporting_org_secondary_reporter,\");",
 											"});",
 											"pm.test(\"document level elements are at beginning of fl\", function () {",
-											"    pm.expect(respText).to.include(\"\\<str name=\\\"fl\\\"\\>iati_activities_document_hash,dataset_iati_version,dataset_date_created,dataset_date_updated\");",
+											"    pm.expect(respText).to.include(\"\\<str name=\\\"fl\\\"\\>iati_activities_document_id,dataset_iati_version,dataset_date_created,dataset_date_updated\");",
 											"});",
 											""
 										],
