@@ -13,6 +13,11 @@ class ActivityFlattener {
             }
         }
 
+        // clean iati_identifier so hash matches lakifier
+        if (canonicalName === 'iati_identifier') {
+            value = value.replace(/\n/g, '').replace(/\r/g, '');
+        }
+
         if (
             ['iso_date', 'value_date', 'extraction_date', '_datetime'].some((dateVal) =>
                 canonicalName.includes(dateVal)
