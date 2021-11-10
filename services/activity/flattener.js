@@ -4,7 +4,7 @@ class ActivityFlattener {
         this.iatiObject = {};
     }
 
-    static addToIatiObject(canonicalName, value, allowEmpty = false) {
+    addToIatiObject(canonicalName, value, allowEmpty = false) {
         value = value.trim();
 
         if (!allowEmpty) {
@@ -65,7 +65,7 @@ class ActivityFlattener {
         }
     }
 
-    static mapIatiObject(node, parentCanonicalName = null) {
+    mapIatiObject(node, parentCanonicalName = null) {
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
             let canonicalName = null;
 
@@ -99,7 +99,7 @@ class ActivityFlattener {
         }
     }
 
-    static buildIatiObject(node, parentCanonicalName = null, map = true) {
+    buildIatiObject(node, parentCanonicalName = null, map = true) {
         if (map) {
             this.mapIatiObject(node);
         }
@@ -189,10 +189,7 @@ class ActivityFlattener {
         return retval;
     }
 
-    static getFlattenedObjectForActivityNode(
-        activity,
-        { generatedDatetime, version, linkedDataDefault }
-    ) {
+    getFlattenedObjectForActivityNode(activity, { generatedDatetime, version, linkedDataDefault }) {
         // required
         this.iatiObject.dataset_version = version;
 
