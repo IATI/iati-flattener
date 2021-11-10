@@ -4,7 +4,7 @@ class ActivityFlattener {
         this.iatiObject = {};
     }
 
-    async addToIatiObject(canonicalName, value, allowEmpty = false) {
+    static addToIatiObject(canonicalName, value, allowEmpty = false) {
         value = value.trim();
 
         if (!allowEmpty) {
@@ -65,7 +65,7 @@ class ActivityFlattener {
         }
     }
 
-    async mapIatiObject(node, parentCanonicalName = null) {
+    static mapIatiObject(node, parentCanonicalName = null) {
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
             let canonicalName = null;
 
@@ -94,14 +94,14 @@ class ActivityFlattener {
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
-                await this.mapIatiObject(node.childNodes[i], canonicalName);
+                this.mapIatiObject(node.childNodes[i], canonicalName);
             }
         }
     }
 
-    async buildIatiObject(node, parentCanonicalName = null, map = true) {
+    static buildIatiObject(node, parentCanonicalName = null, map = true) {
         if (map) {
-            await this.mapIatiObject(node);
+            this.mapIatiObject(node);
         }
 
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
@@ -189,7 +189,7 @@ class ActivityFlattener {
         return retval;
     }
 
-    async getFlattenedObjectForActivityNode(
+    static getFlattenedObjectForActivityNode(
         activity,
         { generatedDatetime, version, linkedDataDefault }
     ) {
@@ -205,7 +205,7 @@ class ActivityFlattener {
             this.iatiObject.dataset_generated_datetime = new Date(generatedDatetime).toISOString();
         }
 
-        await this.buildIatiObject(activity);
+        this.buildIatiObject(activity);
 
         const retval = this.iatiObject;
 
