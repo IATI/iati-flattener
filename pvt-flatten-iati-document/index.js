@@ -39,7 +39,7 @@ module.exports = async (context, req) => {
         body = body.replace(invalidCharRegex, '\n');
     }
 
-    const xmlDoc = new DOMParser().parseFromString(body);
+    let xmlDoc = new DOMParser().parseFromString(body);
 
     let activities = xmlDoc.getElementsByTagName('iati-activities')[0];
 
@@ -63,11 +63,13 @@ module.exports = async (context, req) => {
         const activity = activities[i];
         const activityFlattener = new ActivityFlattener();
 
-        flattenedActivities[i] = await activityFlattener.getFlattenedObjectForActivityNode(
-            activity,
-            { generatedDatetime, version, linkedDataDefault }
-        );
+        flattenedActivities[i] = activityFlattener.getFlattenedObjectForActivityNode(activity, {
+            generatedDatetime,
+            version,
+            linkedDataDefault,
+        });
     }
+    xmlDoc = null;
 
     const responseTime = getElapsedTime(startTime);
 
