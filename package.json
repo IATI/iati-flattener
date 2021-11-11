@@ -1,6 +1,6 @@
 {
     "name": "IATI document flattener",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Flattens IATI documents in preparation to be indexed into Solr",
     "scripts": {
         "start": "func start --javascript",
