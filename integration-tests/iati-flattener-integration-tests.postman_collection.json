@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bf399db5-0951-4820-b4d5-1ea6f56767cc",
+		"_postman_id": "420016c1-e13f-41d6-82c0-530f866f5ca3",
 		"name": "iati-flattener-integration-tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -530,19 +530,20 @@
 											"const re = new RegExp(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z/)",
 											"const jsonData = pm.response.json()[0];",
 											"pm.test(\"iso_dates are in solr format\", function () {",
-											"    ",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('iso_date')).length).to.equal(2)",
 											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('iso_date')).every((key) => {",
 											"        return re.test(jsonData[key])",
 											"    })).to.be.true",
 											"});",
 											"pm.test(\"value_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('value_date')).length).to.equal(2)",
 											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('value_date')).every((key) => {",
 											"        return re.test(jsonData[key])",
 											"    })).to.be.true",
 											"});",
 											"pm.test(\"extraction_date are in solr format\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('extraction_date')).length).to.equal(1)",
 											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('extraction_date')).every((key) => {",
-											"        console.log(re.test(jsonData[key]))",
 											"        return re.test(jsonData[key])",
 											"    })).to.be.true",
 											"});",
@@ -558,6 +559,55 @@
 								"body": {
 									"mode": "raw",
 									"raw": "<iati-activities version=\"2.03\">\n    <iati-activity >\n        <iati-identifier>ACT-1</iati-identifier>\n        <reporting-org ref=\"AA-AAA-123456789\" type=\"40\" secondary-reporter=\"0\">\n            <narrative>Organisation name</narrative>\n            <narrative xml:lang=\"fr\">Nom de l'organisme</narrative>\n        </reporting-org>\n\n        <title>\n            <narrative>Activity title</narrative>\n            <narrative xml:lang=\"fr\">Titre de l'activité</narrative>\n            <narrative xml:lang=\"es\">Título de la actividad</narrative>\n        </title>\n\n        <budget type=\"1\" status=\"1\">\n            <period-start iso-date=\"2014-01-01\" />\n            <period-end iso-date=\"2014-12-31\" />\n            <value currency=\"EUR\" value-date=\"2014-01-01\">3000</value>\n        </budget>\n\n        <fss extraction-date=\"2014-05-06\" priority=\"1\" phaseout-year=\"2016\">\n            <forecast year=\"2014\" value-date=\"2013-07-03\" currency=\"GBP\">10000</forecast>\n        </fss>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IATI XML - Date Format - Empty Multivalue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// @iso-date, @value-date, @extraction-date",
+											"const re = new RegExp(/\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z/)",
+											"const jsonData = pm.response.json()[0];",
+											"pm.test(\"indicator_baseline_iso_date are in solr format, and empty values are 1970-01-01T00:00:00Z\", function () {",
+											"    pm.expect(Object.keys(jsonData).filter((key) => key.includes('indicator_baseline_iso_date')).every((key) => {",
+											"        return jsonData[key].every((dateval) => {",
+											"            return re.test(dateval)",
+											"        })",
+											"    })).to.be.true",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities version=\"2.03\">\n    <iati-activity >\n        <iati-identifier>ACT-1</iati-identifier>\n        <result type=\"1\">\n      <title>\n        <narrative xml:lang=\"en\">3.3. Countries access knowledge resources, capacity building support initiatives, and cross-country learning related to NDC implementation through the Partnership Knowledge Portal, peer to peer exchanges, and outreach materials.</narrative>\n      </title>\n      <indicator measure=\"5\">\n        <title>\n          <narrative xml:lang=\"en\">3.3.1.a Knowledge Portal (Toolbox Navigator, Funding initiatives Navigator, Case Study Database) redesigned and launched in 2018</narrative>\n        </title>\n        <baseline year=\"2017\" iso-date=\"2020-10-29\"/>\n        <period>\n          <period-start iso-date=\"2019-01-01\"/>\n          <period-end iso-date=\"2020-12-31\"/>\n          <target value=\"Yes\"/>\n          <actual value=\"Yes\">\n            <location ref=\"2020\"/>\n          </actual>\n        </period>\n      </indicator>\n      <indicator measure=\"1\">\n        <title>\n          <narrative xml:lang=\"en\">3.3.1.b Number of members refreshing the Knowledge Portal with new knowledge resources/tools annually</narrative>\n        </title>\n        <baseline year=\"2017\"/>\n        <period>\n          <period-start iso-date=\"2019-01-01\"/>\n          <period-end iso-date=\"2020-12-31\"/>\n          <target value=\"20\"/>\n          <actual value=\"36\">\n            <location ref=\"2020\"/>\n          </actual>\n        </period>\n      </indicator>\n      <indicator measure=\"1\">\n        <title>\n          <narrative xml:lang=\"en\">3.3.1.c Number of unique users accessing the Knowledge Portal</narrative>\n        </title>\n        <baseline year=\"2017\" iso-date=\"2019-01-01\" value=\"1000\"/>\n        <period>\n          <period-start iso-date=\"2019-01-01\"/>\n          <period-end iso-date=\"2020-12-31\"/>\n          <target value=\"3000\"/>\n          <actual value=\"3374\">\n            <location ref=\"2020\"/>\n          </actual>\n        </period>\n      </indicator>\n    </iati-activity>\n</iati-activities>",
 									"options": {
 										"raw": {
 											"language": "xml"
