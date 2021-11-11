@@ -1,0 +1,64 @@
+name: Deploy_To_PROD_Function_On_Release
+
+# Runs when a Release is published from GitHub UI
+on:
+  release:
+    types: [published]
+
+env:
+  STAGE: prod # prefix to indicate environment stage
+  NAME: func-iatiflattener
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '14.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  AZURE_CREDENTIALS: ${{ secrets.PROD_AZURE_CREDENTIALS }}
+  API_KEY: ${{ secrets.PROD_FLATTENER_API_KEY }}
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2.4.0
+
+      - name: 'Setup Node ${{ env.NODE_VERSION }} Environment'
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 'Resolve Project Dependencies Using Npm'
+        shell: bash
+        run: |
+          npm i -g npm
+          npm set-script prepare "" 
+          npm install --production
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1.4.0
+        with:
+          creds: ${{ env.AZURE_CREDENTIALS }} # Service Principal credentials saved in GitHub Secrets
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1.4.4
+        with:
+          app-name: ${{ env.NAME }}-${{ env.STAGE }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          respect-funcignore: true
+
+  integration-test:
+    needs: build-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2.4.0
+
+      - name: 'Install newman'
+        run: |
+          sudo npm i -g newman
+
+      - name: 'Run integration tests'
+        run: |
+          newman run integration-tests/iati-flattener-integration-tests.postman_collection.json \
+            -e integration-tests/envs/func-iatiflattener-prod.postman_environment.json \
+            --working-dir integration-tests/test-files \
+            --env-var keyValue=$API_KEY
