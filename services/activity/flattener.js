@@ -24,7 +24,11 @@ class ActivityFlattener {
             )
         ) {
             try {
-                value = new Date(value).toISOString();
+                if (value === '') {
+                    value = '1970-01-01T00:00:00.000Z';
+                } else {
+                    value = new Date(value).toISOString();
+                }
             } catch (error) {
                 console.error(
                     `Could not convert date for field: ${canonicalName}, value: ${value}. Error: ${error}`
