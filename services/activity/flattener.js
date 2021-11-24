@@ -140,7 +140,7 @@ class ActivityFlattener {
                         canonicalName
                     );
 
-                    this.addToIatiObject(canonicalAttName, att.nodeValue);
+                    this.addToIatiObject(canonicalAttName, att.nodeValue, true);
                 }
                 // As per the previous DS, each array of attribute values for an element
                 // needs the same number of elements, regardless as to whether the attribute exists for that element,
