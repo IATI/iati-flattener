@@ -2,6 +2,7 @@
     "name": "IATI document flattener",
     "version": "1.0.2",
     "description": "Flattens IATI documents in preparation to be indexed into Solr",
+    "license": "AGPL-3.0-or-later",
     "scripts": {
         "start": "func start --javascript",
         "start:verbose": "func start --javascript --verbose",
