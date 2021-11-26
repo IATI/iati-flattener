@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "420016c1-e13f-41d6-82c0-530f866f5ca3",
+		"_postman_id": "f431df9f-91df-4f5b-a2b8-2fef5a4a79b8",
 		"name": "iati-flattener-integration-tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -431,6 +431,57 @@
 								"body": {
 									"mode": "raw",
 									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52010\"/>\n        <sector code=\"P13\" vocabulary=\"99\" percentage=\"100\"/>\n    </iati-activity>\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <iati-identifier>ACT-1</iati-identifier>\n        <sector code=\"52999\"/>\n        <sector code=\"P15\" />\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "IATI XML - Multivalued Attribute=\"\"",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.test(\"The activity object contains 6 keys\", function () {",
+											"    pm.expect(Object.keys(jsonData[0]).length).to.equal(6);",
+											"});",
+											"pm.test(\"first activity participating_org_ref attribute is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"participating_org_ref\"].join()).to.eql(\"TEST-GOV-1,TEST-GOV-1,TEST-GOV-1,\")",
+											"});",
+											"pm.test(\"first activity participating_org_role element is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0][\"participating_org_role\"].join()).to.eql(\"1,2,3,4\")",
+											"});",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities generated-datetime=\"2014-09-10T07:15:37Z\" version=\"2.03\">\n    <iati-activity last-updated-datetime=\"2014-09-10T07:15:37Z\">\n        <participating-org ref=\"TEST-GOV-1\" role=\"1\" type=\"10\">\n        </participating-org>\n        <participating-org ref=\"TEST-GOV-1\" role=\"2\" type=\"10\">\n        </participating-org>\n        <participating-org ref=\"TEST-GOV-1\" role=\"3\" type=\"10\">\n        </participating-org>\n        <participating-org ref=\"\" role=\"4\" type=\"22\">\n        </participating-org>\n    </iati-activity>\n</iati-activities>",
 									"options": {
 										"raw": {
 											"language": "xml"
