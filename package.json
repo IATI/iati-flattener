@@ -17,7 +17,7 @@
         "multipart-formdata": "^1.1.0"
     },
     "devDependencies": {
-        "@prettier/plugin-xml": "^1.1.0",
+        "@prettier/plugin-xml": "^1.2.0",
         "eslint": "^8.4.1",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^8.3.0",
