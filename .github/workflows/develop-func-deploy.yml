@@ -7,6 +7,8 @@ on:
       - '**/dependabot.yml'
     branches:
       - develop
+  schedule:
+    - cron: '21 04 * * *' # 0421am daily
 
 env:
   STAGE: dev # prefix to indicate environment stage
@@ -17,7 +19,12 @@ env:
   API_KEY: ${{ secrets.DEV_FLATTENER_API_KEY }}
 
 jobs:
+  should_run:
+    uses: IATI/.github/.github/workflows/should_run.yaml@main
+
   build-deploy:
+    needs: should_run
+    if: ${{ needs.should_run.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
