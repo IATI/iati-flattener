@@ -13,7 +13,7 @@
     "dependencies": {
         "@xmldom/xmldom": "^0.8.0",
         "applicationinsights": "^2.2.1",
-        "dotenv": "^15.0.0",
+        "dotenv": "^16.0.0",
         "multipart-formdata": "^1.1.0"
     },
     "devDependencies": {
