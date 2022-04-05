@@ -12,7 +12,7 @@
     "author": "IATI",
     "dependencies": {
         "@xmldom/xmldom": "^0.8.1",
-        "applicationinsights": "^2.3.0",
+        "applicationinsights": "^2.3.1",
         "dotenv": "^16.0.0",
         "multipart-formdata": "^1.1.0"
     },
