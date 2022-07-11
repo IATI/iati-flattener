@@ -8,32 +8,32 @@ on:
     branches:
       - develop
 
-env:
-  NODE_VERSION: '14.x'
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
-      - name: 'Setup Node ${{ env.NODE_VERSION }} Environment'
-        uses: actions/setup-node@v2.4.1
+      - name: 'Setup Node Environment'
+        uses: actions/setup-node@v3.3.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: 'Install Dependencies with Npm'
         run: |
           npm i -g npm
           npm set-script prepare "" 
-          npm install --production
+          npm ci --production
 
   automerge:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
     steps:
-      - uses: fastify/github-action-merge-dependabot@v2.6.0
+      - uses: fastify/github-action-merge-dependabot@v3.2.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}

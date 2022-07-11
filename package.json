@@ -11,27 +11,27 @@
     },
     "author": "IATI",
     "dependencies": {
-        "@xmldom/xmldom": "^0.7.5",
-        "applicationinsights": "^2.1.9",
-        "dotenv": "^10.0.0",
+        "@xmldom/xmldom": "^0.8.2",
+        "applicationinsights": "^2.3.3",
+        "dotenv": "^16.0.1",
         "multipart-formdata": "^1.1.0"
     },
     "devDependencies": {
-        "@prettier/plugin-xml": "^1.1.0",
-        "eslint": "^8.3.0",
+        "@prettier/plugin-xml": "^2.2.0",
+        "eslint": "^8.19.0",
         "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-import": "^2.25.3",
-        "husky": "^7.0.4",
-        "lint-staged": "^12.1.2",
-        "prettier": "^2.5.0"
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1"
     },
     "lint-staged": {
         "*.js": "eslint --cache --fix",
         "*.{js,css,md}": "prettier --write"
     },
     "engines": {
-        "node": ">=14 <15",
-        "npm": ">=7"
+        "node": ">=16 <17",
+        "npm": ">=8"
     }
 }

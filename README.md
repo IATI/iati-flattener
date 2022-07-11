@@ -1,10 +1,10 @@
 [![Deploy_To_Dev_Function_On_Push](https://github.com/IATI/iati-flattener/actions/workflows/develop-func-deploy.yml/badge.svg)](https://github.com/IATI/iati-flattener/actions/workflows/develop-func-deploy.yml)
 
-# IATI Solr Functions
+# IATI Flattener
 
-This Azure Function provides various services to allow us to index IATI documents to Solr, including a service to convert the IATI schema into a consistent Solr schema, and a service that when given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
+This Azure Function provides a service to allow us to index IATI documents to Solr. When given a valid Activities document will return a json array of those activities flattened into json objects that can be added to Solr.
 
-Both these services follow the convention of reducing Activity documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value - in the case of the Schema converter every possible value-holding element or attribute is represented, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
+This service follows the convention of reducing Activity documents down to a single dimension of all elements and attributes which, by the IATI Schema, might contain a value, in the case of the Flattener, any element or attribute within the given IATI document that holds a value is represented.
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
@@ -33,9 +33,6 @@ Would be flattened to the following:
 
 ## Getting Started
 
-1. Create a new repository from the template
-1. Follow instructions for nvm/node prerequisties above
-1. Update package.json with application name, repository, etc.
 1. Run `npm i`
 1. Run `npm start` to run the function locally using the Azure Functions Core Tools
 
@@ -73,7 +70,7 @@ let myEnvVariable = config.ENV_VAR
 -   Press F5 to start the Azure Function and Attach the VSCode debugger
     -   Configuration is contained in `.vscode/launch.json` and `.vscode/tasks.json`
 -   Trigger a request that will hit your break point
--   Enojy!
+-   Enjoy!
 
 ## Linting and Code Formatting
 
@@ -86,27 +83,11 @@ let myEnvVariable = config.ENV_VAR
 -   This is done with eslint following the airbnb-base style and using [Prettier](https://prettier.io). Implemented with [this](https://sourcelevel.io/blog/how-to-setup-eslint-and-prettier-on-node) guide.
 -   If you use VSCode the formatting will happen automagically on save due to the `.vscode/settings.json` > `"editor.formatOnSave": true` setting
 
-## Schema Prep (Flattening)
-
-The IATI Activities Schema is `iati-activities-schema.xsd` which `xsd:include`'s `iati-common.xsd` to allow our Schema converter to not have to understand that relationship you can "flatten" the schema before converting it using: https://github.com/pkielgithub/SchemaLightener
-
 ## Endpoints /api
-
-### `POST /api/pvt/convert-schema`
-
-Takes an IATI XML schema as the body, and returns a valid Solr schema rean Acivity core presenting to include all possible elements and attributes which may include a value, with their types converted from XSD to an appropriate Solr type.
-
-### `POST /api/pvt/convert-schema-to-config`
-
-Takes an IATI XML schema as the body, and returns a valid Solr `solrconfig.xml`. Currently used to modify the default `fl` query parameter to output only iati elements (in iati order) by default.
 
 ### `POST /api/pvt/flatten/activities`
 
-Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity core, as defined by converting the IATI XML schema using the `POST /api/pvt/convert-schema` route.
-
-## Updating Solr Configset
-
-See https://github.com/IATI/datastore-solr-configs
+Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity collection.
 
 ## Creating a new route
 
@@ -131,9 +112,4 @@ See https://github.com/IATI/datastore-solr-configs
 ### Modifying/Adding
 
 Integration tests are written in Postman v2.1 format and run with newman
-Import the `integrations-tests/azure-function-node-microservice-template.postman_collection.json` into Postman and write additional tests there
-
-## Deployment
-
--   Update relevant items in `.github/workflows/develop-func-deploy.yml` (see comments inline)
--   Create a [Service Principal](https://github.com/IATI/IATI-Internal-Wiki/blob/main/IATI-Unified-Infra/ServicePrincipals.md) and set the DEV_AZURE_CREDENTIALS GitHub Secret
+Import the `integration-tests/iati-flattener-integration-tests.postman_collection.json` into Postman and write additional tests there
