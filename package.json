@@ -1,6 +1,6 @@
 {
     "name": "IATI document flattener",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Flattens IATI documents in preparation to be indexed into Solr",
     "license": "AGPL-3.0-or-later",
     "scripts": {
