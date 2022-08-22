@@ -12,13 +12,13 @@
     "author": "IATI",
     "dependencies": {
         "@xmldom/xmldom": "^0.8.2",
-        "applicationinsights": "^2.3.3",
+        "applicationinsights": "^2.3.4",
         "dotenv": "^16.0.1",
         "multipart-formdata": "^1.1.0"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^2.2.0",
-        "eslint": "^8.19.0",
+        "eslint": "^8.22.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-import": "^2.26.0",
