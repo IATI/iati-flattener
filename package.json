@@ -3,6 +3,7 @@
     "version": "1.0.6",
     "description": "Flattens IATI documents in preparation to be indexed into Solr",
     "license": "AGPL-3.0-or-later",
+    "type": "module",
     "scripts": {
         "start": "func start --javascript",
         "start:verbose": "func start --javascript --verbose",
@@ -13,8 +14,7 @@
     "dependencies": {
         "@xmldom/xmldom": "^0.8.2",
         "applicationinsights": "^2.3.4",
-        "dotenv": "^16.0.1",
-        "multipart-formdata": "^1.1.0"
+        "dotenv": "^16.0.1"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^2.2.0",

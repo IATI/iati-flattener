@@ -4,8 +4,8 @@ class ActivityFlattener {
         this.iatiObject = {};
     }
 
-    addToIatiObject(canonicalName, value, allowEmpty = false) {
-        value = value.trim();
+    addToIatiObject(canonicalName, origValue, allowEmpty = false) {
+        let value = origValue.trim();
 
         if (!allowEmpty) {
             if (value === '') {
@@ -216,4 +216,4 @@ class ActivityFlattener {
     }
 }
 
-module.exports = { ActivityFlattener };
+export default ActivityFlattener;
