@@ -59,7 +59,7 @@ Add in:
 Import
 
 ```
-const config = require("./config");
+import config from "./config.js";
 
 let myEnvVariable = config.ENV_VAR
 ```
@@ -85,7 +85,7 @@ let myEnvVariable = config.ENV_VAR
 
 ## Endpoints /api
 
-### `POST /api/pvt/flatten/activities`
+### pvt-flatten-iati-document `POST /api/pvt/flatten/activities`
 
 Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity collection.
 
