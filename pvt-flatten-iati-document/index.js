@@ -1,8 +1,8 @@
-const { DOMParser } = require('@xmldom/xmldom');
-const { ActivityFlattener } = require('../services/activity/flattener');
-const { client, getStartTime, getElapsedTime } = require('../config/appInsights');
+import { DOMParser } from '@xmldom/xmldom';
+import ActivityFlattener from '../services/activity/flattener.js';
+import { client, getStartTime, getElapsedTime } from '../config/appInsights.js';
 
-module.exports = async (context, req) => {
+export default async function pvtFlattenIatiDocument(context, req) {
     // context.log is equivalent to console.log in Azure Functions
     const startTime = getStartTime();
 
@@ -84,4 +84,4 @@ module.exports = async (context, req) => {
         headers: { 'Content-Type': 'application/json' },
         body: flattenedActivities,
     };
-};
+}
