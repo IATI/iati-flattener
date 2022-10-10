@@ -129,7 +129,11 @@ class ActivityFlattener {
                 }
 
                 if (add) {
-                    this.addToIatiObject(canonicalName, node.textContent);
+                    this.addToIatiObject(
+                        canonicalName,
+                        node.textContent,
+                        canonicalName.endsWith('_narrative')
+                    );
                 }
 
                 for (let i = 0; i < node.attributes.length; i += 1) {
