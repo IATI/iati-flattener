@@ -940,12 +940,12 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "",
+				"value": "{{keyValue}}",
 				"type": "string"
 			},
 			{
 				"key": "key",
-				"value": "",
+				"value": "{{keyName}}",
 				"type": "string"
 			}
 		]
