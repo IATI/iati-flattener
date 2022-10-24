@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "f431df9f-91df-4f5b-a2b8-2fef5a4a79b8",
 		"name": "iati-flattener-integration-tests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13097277"
 	},
 	"item": [
 		{
@@ -822,6 +823,51 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "IATI XML - Blank Narratives",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"pm.test(\"description_narrative attribute is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0].description_narrative.join()).to.eql(\",some french stuff\")",
+											"});",
+											"pm.test(\"description_narrative_xml_lang element is flattened appropriately, in order\", function () {",
+											"    pm.expect(jsonData[0].description_narrative_xml_lang.join()).to.eql(\"en,fr\")",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "<iati-activities>\n    <iati-activity>\n        <description type=\"1\">\n            <narrative xml:lang=\"en\"/>\n            <narrative xml:lang=\"fr\">some french stuff</narrative>\n        </description>\n    </iati-activity>\n</iati-activities>",
+									"options": {
+										"raw": {
+											"language": "xml"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/pvt/flatten/activities",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"pvt",
+										"flatten",
+										"activities"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"event": [
@@ -894,12 +940,12 @@
 		"apikey": [
 			{
 				"key": "value",
-				"value": "{{keyValue}}",
+				"value": "",
 				"type": "string"
 			},
 			{
 				"key": "key",
-				"value": "{{keyName}}",
+				"value": "",
 				"type": "string"
 			}
 		]
