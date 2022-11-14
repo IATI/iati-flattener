@@ -8,19 +8,31 @@ This service follows the convention of reducing Activity documents down to a sin
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
-    <parent att="val1">
-        <child att="val2">
-            Text Value
-        </child>
-    </parent>
+```xml
+<iati-activities version="2.03">
+    <iati-activity att="val1">
+        <parent att="val2">
+            <child att="val3">
+                Text Value
+            </child>
+        </parent>
+    </iati-activity>
+</iati-activities>
+```
 
 Would be flattened to the following:
 
+```json
+[
     {
-        "parent_att": "val1",
+        "dataset_version": "2.03",
+        "att": "val1",
+        "parent_att": "val2",
         "parent_child": "Text Value",
-        "parent_child_att": "val2"
+        "parent_child_att": "val3"
     }
+]
+```
 
 ## Prerequisities
 

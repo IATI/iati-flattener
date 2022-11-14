@@ -1,0 +1,148 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.8'
+  title: 'iati-flattener'
+  description: API to convert and flatten IATI activities documents for indexing into Solr
+
+servers:
+  - url: 'http://localhost:7071'
+    description: Local Function
+  - url: 'https://func-iatiflattener-dev.azurewebsites.net'
+    description: Dev environment Function (requires auth)
+  - url: 'https://func-iatiflattener-prod.azurewebsites.net'
+    description: Production environment Function (requires auth)
+
+paths:
+    /api/pvt/flatten/activities:
+        post:
+            summary: Flatten IATI XML to JSON
+            requestBody:
+              description: The schema-valid IATI XML document to flatten
+              required: true
+              content:
+                application/xml:
+                  schema:
+                    description: XML that conforms to the IATI Activity XML Schema https://github.com/IATI/IATI-Schemas
+                    type: object
+                  examples:
+                    basic:
+                      summary: basic not real example to show how flattening works 
+                      value: |
+                        <iati-activities version="2.03">
+                            <iati-activity att="val1">
+                                <parent att="val2">
+                                    <child att="val3">
+                                        Text Value
+                                    </child>
+                                </parent>
+                            </iati-activity>
+                        </iati-activities>
+                    iatiActivity:
+                      summary: A full iati-activities document
+                      externalValue: https://raw.githubusercontent.com/IATI/IATI-Extra-Documentation/version-2.03/en/activity-standard/activity-standard-example-annotated.xml
+            responses:
+                200:
+                    description: Flattened JSON
+                    content:
+                      application/json:
+                              schema:
+                                  $ref: "#/components/schemas/BasicFlattenedIATI"
+                400:
+                    description: Bad Request
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            examples:
+                              wrongType:
+                                value:
+                                  error: 'Body must be an application/xml string"'
+                              noBodyError:
+                                value:
+                                   error: 'No Body'
+                401:
+                  $ref: "#/components/responses/UnauthorizedError"
+                422:
+                  description: Unprocessable Entity
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/Error"
+                      examples:
+                        notIatiActivity:
+                          value:
+                            error: 'No iati-activities element found - is this an organisations doc?'
+                500:
+                    description: Failed to cache
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /api/pvt/version:
+        get:
+            summary: GET private route
+            responses:
+                200:
+                    description: Version of the application in semver format
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                example: 1.0.7
+                401:
+                  $ref: "#/components/responses/UnauthorizedError"
+                500:
+                    description: Unexpected error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+components:
+    responses:
+      UnauthorizedError:
+        description: API key is missing or invalid
+    schemas:
+        Error:
+          type: object
+          required:
+              - error
+          properties:
+              error:
+                  description: A human readable error message
+                  type: string
+        ResponseMessage:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              description: A human readable response message
+              type: string
+        BasicFlattenedIATI:
+          type: array
+          items:
+            type: object
+            properties:
+              dataset_version:
+                type: string
+              att:
+                type: string
+              parent_att:
+                type: string
+              parent_child:
+                type: string
+              parent_child_att:
+                type: string
+    securitySchemes:
+        ApiKeyHeader:
+            type: apiKey
+            in: header
+            name: x-functions-key
+        ApiKeyQuery:
+            type: apiKey
+            in: query
+            name: x-functions-key
+security:
+    - ApiKeyHeader: []
+    - ApiKeyQuery: []
