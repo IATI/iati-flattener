@@ -34,6 +34,10 @@ Would be flattened to the following:
 ]
 ```
 
+## Endpoints
+
+See OpenAPI specification `postman/schemas/index.yaml`. To view locally in Swagger UI, you can use the `42crunch.vscode-openapi` VSCode extension.
+
 ## Prerequisities
 
 -   nvm - [nvm](https://github.com/nvm-sh/nvm) - Node version manager
@@ -94,12 +98,6 @@ let myEnvVariable = config.ENV_VAR
 
 -   This is done with eslint following the airbnb-base style and using [Prettier](https://prettier.io). Implemented with [this](https://sourcelevel.io/blog/how-to-setup-eslint-and-prettier-on-node) guide.
 -   If you use VSCode the formatting will happen automagically on save due to the `.vscode/settings.json` > `"editor.formatOnSave": true` setting
-
-## Endpoints /api
-
-### pvt-flatten-iati-document `POST /api/pvt/flatten/activities`
-
-Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity collection.
 
 ## Creating a new route
 
