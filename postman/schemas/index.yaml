@@ -81,7 +81,7 @@ paths:
 
     /api/pvt/version:
         get:
-            summary: GET private route
+            summary: GET application version
             responses:
                 200:
                     description: Version of the application in semver format
