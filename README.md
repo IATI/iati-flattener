@@ -8,19 +8,35 @@ This service follows the convention of reducing Activity documents down to a sin
 
 The naming convention for both is to swap hyphens for underscores in tag names, and then join elements to both their children and to their attributes by an underscore. So,
 
-    <parent att="val1">
-        <child att="val2">
-            Text Value
-        </child>
-    </parent>
+```xml
+<iati-activities version="2.03">
+    <iati-activity att="val1">
+        <parent att="val2">
+            <child att="val3">
+                Text Value
+            </child>
+        </parent>
+    </iati-activity>
+</iati-activities>
+```
 
 Would be flattened to the following:
 
+```json
+[
     {
-        "parent_att": "val1",
+        "dataset_version": "2.03",
+        "att": "val1",
+        "parent_att": "val2",
         "parent_child": "Text Value",
-        "parent_child_att": "val2"
+        "parent_child_att": "val3"
     }
+]
+```
+
+## Endpoints
+
+See OpenAPI specification `postman/schemas/index.yaml`. To view locally in Swagger UI, you can use the `42crunch.vscode-openapi` VSCode extension.
 
 ## Prerequisities
 
@@ -82,12 +98,6 @@ let myEnvVariable = config.ENV_VAR
 
 -   This is done with eslint following the airbnb-base style and using [Prettier](https://prettier.io). Implemented with [this](https://sourcelevel.io/blog/how-to-setup-eslint-and-prettier-on-node) guide.
 -   If you use VSCode the formatting will happen automagically on save due to the `.vscode/settings.json` > `"editor.formatOnSave": true` setting
-
-## Endpoints /api
-
-### pvt-flatten-iati-document `POST /api/pvt/flatten/activities`
-
-Takes a valid iati-activities XML document as the body and returns a json array of those activities flattened into json objects that can be added to the Solr Activity collection.
 
 ## Creating a new route
 
