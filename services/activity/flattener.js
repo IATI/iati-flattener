@@ -1,6 +1,7 @@
 class ActivityFlattener {
     constructor() {
         this.iatiMap = {};
+        this.iatiMapAdded = {};
         this.iatiObject = {};
     }
 
@@ -95,6 +96,18 @@ class ActivityFlattener {
                         this.iatiMap[canonicalName].push(canonicalAttName);
                     }
                 }
+
+                let add = true;
+
+                for (let i = 0; i < node.childNodes.length; i += 1) {
+                    if (node.childNodes[i].constructor.name === 'Element') {
+                        add = false;
+                    }
+                }
+
+                if (add) {
+                    this.iatiMapAdded[canonicalName] = true;
+                }
             }
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
@@ -110,6 +123,8 @@ class ActivityFlattener {
 
         if (Object.prototype.hasOwnProperty.call(node, 'nodeName')) {
             let canonicalName = null;
+            const attributes = [];
+            const childrenNodes = [];
 
             if (node.nodeName !== 'iati-activity') {
                 canonicalName = ActivityFlattener.convertNameToCanonical(
@@ -149,8 +164,6 @@ class ActivityFlattener {
                 // As per the previous DS, each array of attribute values for an element
                 // needs the same number of elements, regardless as to whether the attribute exists for that element,
                 // and in the same order, hence the following rigmarole to add in empty strings
-                const attributes = [];
-
                 for (let n = 0; n < node.attributes.length; n += 1) {
                     const canonicalAttName = ActivityFlattener.convertNameToCanonical(
                         node.attributes[n].nodeName,
@@ -174,6 +187,7 @@ class ActivityFlattener {
                         att.nodeName,
                         canonicalName
                     );
+                    attributes.push(canonicalAttName);
 
                     this.addToIatiObject(canonicalAttName, att.nodeValue);
                 }
@@ -181,6 +195,31 @@ class ActivityFlattener {
 
             for (let i = 0; i < node.childNodes.length; i += 1) {
                 this.buildIatiObject(node.childNodes[i], canonicalName, false);
+                childrenNodes.push(
+                    ActivityFlattener.convertNameToCanonical(
+                        node.childNodes[i].nodeName,
+                        canonicalName
+                    )
+                );
+            }
+            // Also allow the adding of blank elements where needed to preserve explosion alignment
+            for (let i = 0; i < Object.keys(this.iatiMapAdded).length; i += 1) {
+                const missingKey = Object.keys(this.iatiMapAdded)[i];
+                const related = missingKey.startsWith(`${canonicalName}_`);
+                const attributeIsMissing = !attributes.includes(missingKey);
+                let hasACloserRelative = false;
+                if (related) {
+                    for (let j = 0; j < childrenNodes.length; j += 1) {
+                        const childName = childrenNodes[j];
+                        const childRelated = missingKey.startsWith(childName);
+                        if (childRelated) {
+                            hasACloserRelative = true;
+                        }
+                    }
+                }
+                if (related && !hasACloserRelative && attributeIsMissing) {
+                    this.addToIatiObject(missingKey, '', true);
+                }
             }
         }
     }
