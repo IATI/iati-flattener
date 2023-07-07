@@ -28,6 +28,9 @@ class ActivityFlattener {
                 if (value === '') {
                     value = '1970-01-01T00:00:00.000Z';
                 } else {
+                    if (value.includes('+')) {
+                        [value] = value.split('+');
+                    }
                     value = new Date(value).toISOString();
                 }
             } catch (error) {
@@ -246,7 +249,13 @@ class ActivityFlattener {
         }
 
         if (generatedDatetime) {
-            this.iatiObject.dataset_generated_datetime = new Date(generatedDatetime).toISOString();
+            let fixedGeneratedDatetime = generatedDatetime;
+            if (generatedDatetime.includes('+')) {
+                [fixedGeneratedDatetime] = generatedDatetime.split('+');
+            }
+            this.iatiObject.dataset_generated_datetime = new Date(
+                fixedGeneratedDatetime
+            ).toISOString();
         }
 
         this.buildIatiObject(activity);
