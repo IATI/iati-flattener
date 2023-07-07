@@ -1,6 +1,6 @@
 {
     "name": "iati-flattener",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "Flattens IATI documents in preparation to be indexed into Solr",
     "license": "AGPL-3.0-or-later",
     "type": "module",
@@ -12,19 +12,19 @@
     },
     "author": "IATI",
     "dependencies": {
-        "@xmldom/xmldom": "^0.8.7",
-        "applicationinsights": "^2.5.1",
-        "dotenv": "^16.0.3"
+        "@xmldom/xmldom": "^0.8.8",
+        "applicationinsights": "^2.7.0",
+        "dotenv": "^16.3.1"
     },
     "devDependencies": {
-        "@prettier/plugin-xml": "^2.2.0",
-        "eslint": "^8.38.0",
+        "@prettier/plugin-xml": "^3.0.0",
+        "eslint": "^8.44.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-import": "^2.27.5",
         "husky": "^8.0.3",
-        "lint-staged": "^13.2.1",
-        "prettier": "^2.8.7"
+        "lint-staged": "^13.2.3",
+        "prettier": "^3.0.0"
     },
     "lint-staged": {
         "*.js": "eslint --cache --fix",
