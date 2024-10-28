@@ -12,7 +12,7 @@
     },
     "author": "IATI",
     "dependencies": {
-        "@xmldom/xmldom": "^0.9.4",
+        "@xmldom/xmldom": "^0.9.5",
         "applicationinsights": "^2.9.5",
         "dotenv": "^16.4.5"
     },
