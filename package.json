@@ -14,7 +14,7 @@
     "dependencies": {
         "@xmldom/xmldom": "^0.9.5",
         "applicationinsights": "^2.9.5",
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.7"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^3.4.1",
